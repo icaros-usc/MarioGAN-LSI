@@ -44,7 +44,7 @@ parser.add_argument('--problem', type=int, default=0, help='Level examples')
 parser.add_argument('--json', default=None, help='Json file')
 parser.add_argument('--seed', type=int, default=0, help='random seed for reproducibility')
 opt = parser.parse_args()
-print(opt)
+#print(opt)
 
 if opt.experiment is None:
     opt.experiment = 'samples'

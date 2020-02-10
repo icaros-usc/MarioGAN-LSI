@@ -1,7 +1,12 @@
 import os
-os.environ['CLASSPATH'] = "E:/6thSemester/Mario-AI-Framework/src"
-#os.chdir("./src/")
+import sys
 print(os.getcwd())
+sys.path.append(os.getcwd())
+from util import helper
+from util import bc_calculate
+
+os.environ['CLASSPATH'] = "E:/6thSemester/Mario-AI-Framework/src"
+
 
 import matplotlib
 matplotlib.use("agg")
@@ -20,7 +25,7 @@ import toml
 import sys
 import json
 import numpy
-import models.dcgan as dcgan
+import util.models.dcgan as dcgan
 import cma
 import random
 import math
@@ -34,7 +39,7 @@ from torch.autograd import Variable
 import sys
 import json
 import numpy
-import models.dcgan as dcgan
+import util.models.dcgan as dcgan
 #import matplotlib.pyplot as plt
 import math
 import random
@@ -45,8 +50,13 @@ from jnius import autoclass
 MarioGame = autoclass('engine.core.MarioGame')
 Agent = autoclass('agents.robinBaumgarten.Agent')
 
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument('-c','--config', help='path of experiment config file',required=True)
+opt = parser.parse_args()
+#parsed_toml = toml.load("./config/cma_me.tml")
 
-parsed_toml = toml.load("./config/cma_me.tml")
+parsed_toml=toml.load(opt.config)
 
 success_map=parsed_toml["LogPaths"]["success_map"]
 records=parsed_toml["LogPaths"]["recordsCSV"]
@@ -107,32 +117,10 @@ def gan_generate(x):
     #num_non_empty=num_non_empty/2 #range for each cell in x axis is 2
     return json.dumps(im[0].tolist())#,num_non_empty,num_enemies
 
+with open('GANTraining/index2str.json') as f:
+  index2str = json.load(f)
 def get_char(x):
-    return {
-             0:'-',
-             1:'F',
-             2:'-',
-             3:'y',
-             4:'g',
-             5:'k',
-             6:'r',
-             7:'X',
-             8:'#',
-             9:'%',
-             10:'|',
-             11:'t',
-             12:'@',
-             13:'B',
-             14:'b',
-             15:'?',
-             16:'Q',
-             17:'S',           
-             18:'o',
-             19:'<',
-             20:'>',
-             21:'[',
-             22:']'      
-        }[x] 
+    return index2str[str(x)] 
 
 def to_level(number_level):
     result = []
@@ -177,32 +165,40 @@ def eval_mario(ind):
     featureY=get_featureY(ind,result)
     ind.features=(featureX,featureY)
     completion_percentage=float(statsList[0])
+
     return completion_percentage
 
 evaluate = eval_mario
 
-def Higher_Level_Non_Empty_Blocks(ind,result):
+"""
+def calc_higher_level_non_empty_blocks(ind,result):
     im=np.array(json.loads(ind.level))
     higher=im[0:HigherLevel,:]
     num_non_empty=len(higher[higher!=EMPTY])
     #num_non_empty=len(im[im!=EMPTY])
     return num_non_empty
 
-def Num_Enemies(ind,result):
+def calc_num_enemies(ind,result):
     im=np.array(json.loads(ind.level))
     num_enemies =  len (im[np.isin(im,ENEMY)])
     return num_enemies
 
-def Coins_Collected(ind,result):
+def calc_coins_collected(ind,result):
     return result.getNumCollectedTileCoins()
+"""
 
 get_featureX=parsed_toml["featureX"]
 get_featureY=parsed_toml["featureY"]
+"""
 possibles=globals().copy()
 get_featureX=possibles.get(get_featureX)
 get_featureY=possibles.get(get_featureY)
+"""
+get_featureX=getattr(bc_calculate, get_featureX)
+get_featureY=getattr(bc_calculate, get_featureY)
 #get_featureX=Higher_Level_Non_Empty_Blocks
 #get_featureY=Num_Enemies
+
 
 def gaussian():
     u1 = 1.0 - random.random()

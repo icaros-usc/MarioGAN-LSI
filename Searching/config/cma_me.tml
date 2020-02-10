@@ -1,0 +1,69 @@
+GANModelPath = "GANTraining/samples/netG_epoch_5000_6393.pth"
+
+NumSimulations=20
+
+RecordFrequency=5
+
+PopulationSize=4
+
+Algorithm="CMAES"
+
+featureX="calc_higher_level_non_empty_blocks"
+featureY="calc_num_enemies"
+
+[LogPaths]
+fail_map="fail_map"
+success_map="success_map"
+recordsCSV="records"
+
+[GameSetting]
+COIN=18
+GROUND = 7
+ENEMY = [4,5,6]
+PIPE = 6 
+EMPTY = 2
+
+[ModelParameter]
+num_params = 96
+boundary_value = 5.12
+batchSize = 3
+nz = 32  
+imageSize = 64
+ngf = 64
+ngpu = 1
+n_extra_layers = 0
+features=23
+
+[HeightSeparator]
+Ground=15
+AboveGround=14
+MiddleLevel=11
+HigherLevel=9
+
+[EmitterSelection]
+RandomDirectionEmitter = false
+ImprovementEmitter = true
+OptimizingEmitter = false
+
+[CMAMESetting]
+StartResolution = 60
+EndResolution = 60
+X_Low=0
+X_High=39
+Y_Low=0
+Y_High=19
+MutationPower=0.5
+
+[MAPEliteSetting]
+StartResolution = 60
+EndResolution = 60
+MutationPower=0.5
+InitialPopulation=10
+
+
+[ISOLineDDSetting]
+StartResolution = 60
+EndResolution = 60
+MutationPower1=0.01
+MutationPower2=0.2
+InitialPopulation=10
