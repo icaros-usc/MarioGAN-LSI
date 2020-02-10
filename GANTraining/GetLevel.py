@@ -1,7 +1,7 @@
 import os
 import sys
 sys.path.append(os.getcwd())
-from util.helper import *
+from util.TrainLevelHelper import *
 import toml
 
 def generate_training_level():
