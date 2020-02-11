@@ -1,0 +1,3 @@
+GAN_model_path = "GANTrain/samples/netG_epoch_4999_5008.pth"
+num_trials=20
+trial_config= "Search/config/trial/trial1.tml"

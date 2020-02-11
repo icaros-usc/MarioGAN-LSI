@@ -84,7 +84,7 @@ class DecompMatrix:
 
 class FeatureMap:
 
-   def __init__(self, max_individuals, feature_ranges, resolutions):
+   def __init__(self, max_individuals, feature_ranges, resolutions=(60,60)):
       self.max_individuals = max_individuals
       self.feature_ranges = feature_ranges
       self.resolutions = resolutions

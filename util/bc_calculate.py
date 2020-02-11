@@ -4,20 +4,10 @@ import os
 import json
 import toml
 
-parsed_toml=toml.load("Searching/config/cma_me.tml")
-
-COIN=parsed_toml["GameSetting"]["COIN"]
-GROUND = parsed_toml["GameSetting"]["GROUND"]
-ENEMY = parsed_toml["GameSetting"]["ENEMY"]
-PIPE = parsed_toml["GameSetting"]["PIPE"]
-EMPTY = parsed_toml["GameSetting"]["EMPTY"]
-
-Ground=parsed_toml["HeightSeparator"]["Ground"]
-AboveGround=parsed_toml["HeightSeparator"]["AboveGround"]
-MiddleLevel=parsed_toml["HeightSeparator"]["MiddleLevel"]
-HigherLevel=parsed_toml["HeightSeparator"]["HigherLevel"]
 
 def calc_higher_level_non_empty_blocks(ind,result):
+    HigherLevel=9
+    EMPTY=0
     im=np.array(json.loads(ind.level))
     higher=im[0:HigherLevel,:]
     num_non_empty=len(higher[higher!=EMPTY])
@@ -25,6 +15,7 @@ def calc_higher_level_non_empty_blocks(ind,result):
     return num_non_empty
 
 def calc_num_enemies(ind,result):
+    ENEMY=[3,4,5]
     im=np.array(json.loads(ind.level))
     num_enemies =  len (im[np.isin(im,ENEMY)])
     return num_enemies

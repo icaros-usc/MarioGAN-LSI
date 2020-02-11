@@ -1,0 +1,4 @@
+[ISOLineDDSetting]
+mutation_power1=0.01
+mutation_power2=0.2
+initial_population=10
