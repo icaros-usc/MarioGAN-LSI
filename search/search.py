@@ -54,11 +54,6 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument('-c','--config', help='path of experiment config file',required=True)
 opt = parser.parse_args()
-#parsed_toml = toml.load("./config/cma_me.tml")
-
-parsed_toml=toml.load(opt.config)
-
-records=parsed_toml["LogPaths"]["recordsCSV"]
 
 if not os.path.exists(success_map):
     os.mkdir(success_map)
@@ -86,9 +81,14 @@ def eval_mario(ind):
     #messageReceived=sys.stdin.readline()
     statsList=messageReceived.split(',')
     ind.statsList=statsList
-    featureX=get_featureX(ind,result)
-    featureY=get_featureY(ind,result)
-    ind.features=(featureX,featureY)
+    ind.features=[]
+    elite_map_toml=toml.load(elite_map_path)
+    for bc in elite_map_toml["Map.Features"]:
+	get_feature=bc["name"]
+	get_feature=getattr(bc_calculate,get_feature)
+    	feature_value=get_feature(ind,result)
+        ind.features.append(feature_value)
+    ind.features=tuple(ind.features)
     completion_percentage=float(statsList[0])
 
     return completion_percentage
@@ -96,37 +96,40 @@ def eval_mario(ind):
 evaluate = eval_mario
 
 
-get_featureX=parsed_toml["featureX"]
-get_featureY=parsed_toml["featureY"]
-get_featureX=getattr(bc_calculate, get_featureX)
-get_featureY=getattr(bc_calculate, get_featureY)
+def run_cma_es(num_to_evaluate, algorithm_path,elite_map_path,trial_name):
 
+    algorithm_toml=toml.load(algorithm_path)
+    elite_map_toml=toml.load(elite_map_path)
+    mutation_power=algorithm_toml["mutation_power"]
+    population_size=algorithm_toml["population_size"]
+    feature_ranges=[]
+    for bc in elite_map_toml["Map.Features"]:
+	feature_ranges.append((bc["low"],bc["high"]))
+    feature_map = FeatureMap(num_to_evaluate, feature_ranges)
 
-
-def run_cma_es(num_to_evaluate, mutation_power):
-
-    resolution = (parsed_toml["CMAMESetting"]["StartResolution"],parsed_toml["CMAMESetting"]["EndResolution"])
-    feature_ranges=[(parsed_toml["CMAMESetting"]["X_Low"],parsed_toml["CMAMESetting"]["X_High"]),(parsed_toml["CMAMESetting"]["Y_Low"],parsed_toml["CMAMESetting"]["Y_High"])]
-
-    feature_map = FeatureMap(num_to_evaluate, feature_ranges, resolution)
-    cmaes = CMA_ES_Algorithm(num_to_evaluate,mutation_power,feature_map)
+    cmaes = CMA_ES_Algorithm(num_to_evaluate,mutation_power,population_size,feature_map)
 
     while cmaes.is_running():
         ind = cmaes.generate_individual()
+        ind.elite_map_path=elite_map_path
         ind.fitness = evaluate(ind)
         cmaes.return_evaluated_individual(ind)
     
     #output all records to csv files
-    cmaes.allRecords.to_csv(records+"\\AllRecords.csv")
+    cmaes.allRecords.to_csv("logs\\"+trial_name+".csv")
 
 
           
 
-def run_cma_me(num_to_evaluate, mutation_power=parsed_toml["CMAMESetting"]["MutationPower"]):
-    resolution = (parsed_toml["CMAMESetting"]["StartResolution"],parsed_toml["CMAMESetting"]["EndResolution"])
-    feature_ranges=[(parsed_toml["CMAMESetting"]["X_Low"],parsed_toml["CMAMESetting"]["X_High"]),(parsed_toml["CMAMESetting"]["Y_Low"],parsed_toml["CMAMESetting"]["Y_High"])]
-
-    feature_map = FeatureMap(num_to_evaluate, feature_ranges, resolution)
+def run_cma_me(num_to_evaluate, algorithm_path,elite_map_path,trial_name):
+    algorithm_toml=toml.load(algorithm_path)
+    elite_map_toml=toml.load(elite_map_path)
+    mutation_power=algorithm_toml["mutation_power"]
+    population_size=algorithm_toml["population_size"]
+    feature_ranges=[]
+    for bc in elite_map_toml["Map.Features"]:
+	feature_ranges.append((bc["low"],bc["high"]))
+    feature_map = FeatureMap(num_to_evaluate, feature_ranges)
     
     cma_me = CMA_ME_Algorithm(mutation_power, num_to_evaluate, feature_map)
 
@@ -139,13 +142,18 @@ def run_cma_me(num_to_evaluate, mutation_power=parsed_toml["CMAMESetting"]["Muta
         cma_me.return_evaluated_individual(ind)
 
     #output all records to csv files
-    cma_me.allRecords.to_csv(records+"\\AllRecords.csv")
+    cma_me.allRecords.to_csv("logs\\"+trial_name+".csv")
 
 
-def run_map_elites(num_to_evaluate, initial_population, mutation_power=parsed_toml["MAPEliteSetting"]["MutationPower"]):
-    resolution = (parsed_toml["MAPEliteSetting"]["StartResolution"],parsed_toml["MAPEliteSetting"]["EndResolution"])
-    feature_ranges=[(parsed_toml["CMAMESetting"]["X_Low"],parsed_toml["CMAMESetting"]["X_High"]),(parsed_toml["CMAMESetting"]["Y_Low"],parsed_toml["CMAMESetting"]["Y_High"])]
-    feature_map = FeatureMap(num_to_evaluate, feature_ranges, resolution)
+def run_map_elites(num_to_evaluate, algorithm_path,elite_map_path,trial_name):
+    algorithm_toml=toml.load(algorithm_path)
+    elite_map_toml=toml.load(elite_map_path)
+    mutation_power=algorithm_toml["mutation_power"]
+    initial_population=algorithm_toml["initial_population"]
+    feature_ranges=[]
+    for bc in elite_map_toml["Map.Features"]:
+	feature_ranges.append((bc["low"],bc["high"]))
+    feature_map = FeatureMap(num_to_evaluate, feature_ranges)
     
 
     me = MapElitesAlgorithm(mutation_power, 
@@ -160,29 +168,35 @@ def run_map_elites(num_to_evaluate, initial_population, mutation_power=parsed_to
         if ind.fitness > best:
             best = ind.fitness
         me.return_evaluated_individual(ind)
-    me.allRecords.to_csv(records+"\\AllRecords.csv")
+    me.allRecords.to_csv("logs\\"+trial_name+".csv")
 
 
-def run_ISOLineDD(num_to_evaluate, initial_population, mutation_power1,mutation_power2):
-    resolution = (parsed_toml["MAPEliteSetting"]["StartResolution"],parsed_toml["MAPEliteSetting"]["EndResolution"])
-    feature_ranges=[(parsed_toml["CMAMESetting"]["X_Low"],parsed_toml["CMAMESetting"]["X_High"]),(parsed_toml["CMAMESetting"]["Y_Low"],parsed_toml["CMAMESetting"]["Y_High"])]
-    feature_map = FeatureMap(num_to_evaluate, feature_ranges, resolution)
+def run_ISOLineDD(num_to_evaluate, algorithm_path,elite_map_path,trial_name):
+    algorithm_toml=toml.load(algorithm_path)
+    elite_map_toml=toml.load(elite_map_path)
+    mutation_power1=algorithm_toml["mutation_power1"]
+    mutation_power2=algorithm_toml["mutation_power2"]
+    initial_population=algorithm_toml["initial_population"]
+    feature_ranges=[]
+    for bc in elite_map_toml["Map.Features"]:
+	feature_ranges.append((bc["low"],bc["high"]))
+    feature_map = FeatureMap(num_to_evaluate, feature_ranges)
     
 
-    me = ISOLineDDAlgorithm(mutation_power1,
+    isolineDD = ISOLineDDAlgorithm(mutation_power1,
                             mutation_power2,
                             initial_population, 
                             num_to_evaluate, 
                             feature_map)
 
     best = -10 ** 18
-    while me.is_running():
-        ind = me.generate_individual()
+    while isolineDD.is_running():
+        ind = isolineDD.generate_individual()
         ind.fitness = evaluate(ind)
         if ind.fitness > best:
             best = ind.fitness
-        me.return_evaluated_individual(ind)
-    me.allRecords.to_csv(records+"\\AllRecords.csv")
+        isolineDD.return_evaluated_individual(ind)
+    isolineDD.allRecords.to_csv("logs\\"+trial_name+".csv")
 
 
 if __name__ == '__main__':
@@ -199,7 +213,7 @@ if __name__ == '__main__':
         run_cma_es(NumSimulations,mutation_power=parsed_toml["CMAESSetting"]["MutationPower"])
     if(AlgorithmToRun=="CMAME"):
         run_cma_me(NumSimulations, mutation_power=parsed_toml["CMAMESetting"]["MutationPower"])
-    if(AlgorithmToRun=="MAPELITE"):
+    if(AlgorithmToRun=="MAPELITES"):
         run_map_elites(NumSimulations,initial_population=parsed_toml["MAPEliteSetting"]["InitialPopulation"],mutation_power=parsed_toml["MAPEliteSetting"]["MutationPower"])
     if(AlgorithmToRun=="ISOLineDD"):
         run_ISOLineDD(NumSimulations,initial_population=parsed_toml["ISOLineDDSetting"]["InitialPopulation"],mutation_power1=parsed_toml["ISOLineDDSetting"]["MutationPower1"],mutation_power2=parsed_toml["ISOLineDDSetting"]["MutationPower2"])

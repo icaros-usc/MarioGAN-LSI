@@ -19,8 +19,8 @@ records=parsed_toml["LogPaths"]["recordsCSV"]
 
 class CMA_ES_Algorithm:
 
-    def __init__(self, num_to_evaluate,mutation_power,feature_map):
-        self.population_size=parsed_toml["PopulationSize"]
+    def __init__(self, num_to_evaluate,mutation_power,population_size,feature_map):
+        self.population_size=population_size
         self.num_parents = self.population_size // 2
         self.feature_map=feature_map
         self.allRecords=pd.DataFrame(columns=['emitterName','latentVector', 'completionPercentage','jumpActionsPerformed','killsTotal','livesLeft','coinsCollected','remainingTime (20-timeSpent)','behavior feature X','behavior feature Y'])
@@ -145,9 +145,9 @@ class CMA_ES_Algorithm:
 
 class ImprovementEmitter:
 
-    def __init__(self, mutation_power, feature_map):
+    def __init__(self, mutation_power, population_size,feature_map):
         #self.population_size = int(4.0+math.floor(3.0*math.log(num_params))) * 2
-        self.population_size=parsed_toml["PopulationSize"]
+        self.population_size=population_size
         #print('pop size', self.population_size)
         self.sigma = mutation_power
         self.num_released = 0
@@ -282,12 +282,12 @@ class ImprovementEmitter:
 
 class CMA_ME_Algorithm:
 
-    def __init__(self, mutation_power, num_to_evaluate, feature_map):
+    def __init__(self, mutation_power, num_to_evaluate, population_size,feature_map):
         self.emitters = []
         self.records=[]
         self.allRecords=pd.DataFrame(columns=['emitterName','latentVector', 'completionPercentage','jumpActionsPerformed','killsTotal','livesLeft','coinsCollected','remainingTime (20-timeSpent)','behavior feature X','behavior feature Y'])
         
-        self.emitters += [ImprovementEmitter(mutation_power, feature_map) for i in range(1)]
+        self.emitters += [ImprovementEmitter(mutation_power, population_size,feature_map) for i in range(1)]
         self.records+=[pd.DataFrame(columns=['emitterName','latentVector', 'completionPercentage','jumpActionsPerformed','killsTotal','livesLeft','coinsCollected','remainingTime (20-timeSpent)','behavior feature X','behavior feature Y'])]
         
         self.num_to_evaluate = num_to_evaluate
@@ -450,4 +450,4 @@ class ISOLineDDAlgorithm:
                     rowData.append(currElite)
                 wr = csv.writer(logFile, dialect='excel')
                 wr.writerow(rowData)
-                logFile.close()
+                logFile.close()   
