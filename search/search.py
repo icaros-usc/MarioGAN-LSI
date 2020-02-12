@@ -60,6 +60,7 @@ if not os.path.exists(success_map):
 if not os.path.exists(records):
     os.mkdir(records)
 
+EliteMapConfig=[]
 
 
 
@@ -82,11 +83,10 @@ def eval_mario(ind):
     statsList=messageReceived.split(',')
     ind.statsList=statsList
     ind.features=[]
-    elite_map_toml=toml.load(elite_map_path)
-    for bc in elite_map_toml["Map.Features"]:
-	get_feature=bc["name"]
-	get_feature=getattr(bc_calculate,get_feature)
-    	feature_value=get_feature(ind,result)
+    for bc in EliteMapConfig["Map.Features"]:
+        get_feature=bc["name"]
+        get_feature=getattr(bc_calculate,get_feature)
+        feature_value=get_feature(ind,result)
         ind.features.append(feature_value)
     ind.features=tuple(ind.features)
     completion_percentage=float(statsList[0])
@@ -96,125 +96,48 @@ def eval_mario(ind):
 evaluate = eval_mario
 
 
-def run_cma_es(num_to_evaluate, algorithm_path,elite_map_path,trial_name):
 
-    algorithm_toml=toml.load(algorithm_path)
-    elite_map_toml=toml.load(elite_map_path)
-    mutation_power=algorithm_toml["mutation_power"]
-    population_size=algorithm_toml["population_size"]
+def run_trial(num_to_evaluate,algorithm_name,algorithm_config,elite_map_config,trial_name):
     feature_ranges=[]
-    for bc in elite_map_toml["Map.Features"]:
-	feature_ranges.append((bc["low"],bc["high"]))
+    for bc in elite_map_config["Map.Features"]:
+        feature_ranges.append((bc["low"],bc["high"]))
     feature_map = FeatureMap(num_to_evaluate, feature_ranges)
 
-    cmaes = CMA_ES_Algorithm(num_to_evaluate,mutation_power,population_size,feature_map)
-
-    while cmaes.is_running():
-        ind = cmaes.generate_individual()
-        ind.elite_map_path=elite_map_path
-        ind.fitness = evaluate(ind)
-        cmaes.return_evaluated_individual(ind)
+    if algorithm_name=="CMAES":
+        mutation_power=algorithm_config["mutation_power"]
+        population_size=algorithm_config["population_size"]
+        algorithm_instance=CMA_ES_Algorithm(num_to_evaluate,mutation_power,population_size,feature_map)
+    elif algorithm_name=="CMAME":
+        mutation_power=algorithm_config["mutation_power"]
+        population_size=algorithm_config["population_size"]
+        algorithm_instance=CMA_ME_Algorithm(mutation_power,num_to_evaluate,population_size,feature_map)
+    elif algorithm_name=="MAPELITES":
+        mutation_power=algorithm_config["mutation_power"]
+        initial_population=algorithm_config["initial_population"]
+        algorithm_instance=MapElitesAlgorithm(mutation_power, initial_population, num_to_evaluate, feature_map)
+    elif algorithm_name=="ISOLINEDD":
+        mutation_power1=algorithm_config["mutation_power1"]
+        mutation_power2=algorithm_config["mutation_power2"]
+        initial_population=algorithm_config["initial_population"]
+        algorithm_instance=ISOLineDDAlgorithm(mutation_power1, mutation_power2,initial_population, num_to_evaluate, feature_map)
     
-    #output all records to csv files
-    cmaes.allRecords.to_csv("logs\\"+trial_name+".csv")
-
-
-          
-
-def run_cma_me(num_to_evaluate, algorithm_path,elite_map_path,trial_name):
-    algorithm_toml=toml.load(algorithm_path)
-    elite_map_toml=toml.load(elite_map_path)
-    mutation_power=algorithm_toml["mutation_power"]
-    population_size=algorithm_toml["population_size"]
-    feature_ranges=[]
-    for bc in elite_map_toml["Map.Features"]:
-	feature_ranges.append((bc["low"],bc["high"]))
-    feature_map = FeatureMap(num_to_evaluate, feature_ranges)
-    
-    cma_me = CMA_ME_Algorithm(mutation_power, num_to_evaluate, feature_map)
-
-    best = -10 ** 18
-    while cma_me.is_running():
-        ind = cma_me.generate_individual()
+    while algorithm_instance.is_running():
+        ind = algorithm_instance.generate_individual()
         ind.fitness = evaluate(ind)
         if ind.fitness > best:
             best = ind.fitness
-        cma_me.return_evaluated_individual(ind)
-
-    #output all records to csv files
-    cma_me.allRecords.to_csv("logs\\"+trial_name+".csv")
-
-
-def run_map_elites(num_to_evaluate, algorithm_path,elite_map_path,trial_name):
-    algorithm_toml=toml.load(algorithm_path)
-    elite_map_toml=toml.load(elite_map_path)
-    mutation_power=algorithm_toml["mutation_power"]
-    initial_population=algorithm_toml["initial_population"]
-    feature_ranges=[]
-    for bc in elite_map_toml["Map.Features"]:
-	feature_ranges.append((bc["low"],bc["high"]))
-    feature_map = FeatureMap(num_to_evaluate, feature_ranges)
-    
-
-    me = MapElitesAlgorithm(mutation_power, 
-                            initial_population, 
-                            num_to_evaluate, 
-                            feature_map)
-
-    best = -10 ** 18
-    while me.is_running():
-        ind = me.generate_individual()
-        ind.fitness = evaluate(ind)
-        if ind.fitness > best:
-            best = ind.fitness
-        me.return_evaluated_individual(ind)
-    me.allRecords.to_csv("logs\\"+trial_name+".csv")
-
-
-def run_ISOLineDD(num_to_evaluate, algorithm_path,elite_map_path,trial_name):
-    algorithm_toml=toml.load(algorithm_path)
-    elite_map_toml=toml.load(elite_map_path)
-    mutation_power1=algorithm_toml["mutation_power1"]
-    mutation_power2=algorithm_toml["mutation_power2"]
-    initial_population=algorithm_toml["initial_population"]
-    feature_ranges=[]
-    for bc in elite_map_toml["Map.Features"]:
-	feature_ranges.append((bc["low"],bc["high"]))
-    feature_map = FeatureMap(num_to_evaluate, feature_ranges)
-    
-
-    isolineDD = ISOLineDDAlgorithm(mutation_power1,
-                            mutation_power2,
-                            initial_population, 
-                            num_to_evaluate, 
-                            feature_map)
-
-    best = -10 ** 18
-    while isolineDD.is_running():
-        ind = isolineDD.generate_individual()
-        ind.fitness = evaluate(ind)
-        if ind.fitness > best:
-            best = ind.fitness
-        isolineDD.return_evaluated_individual(ind)
-    isolineDD.allRecords.to_csv("logs\\"+trial_name+".csv")
-
+        algorithm_instance.return_evaluated_individual(ind)
+    algorithm_instance.allRecords.to_csv("logs\\"+trial_name+".csv")
 
 if __name__ == '__main__':
     print("READY") # Java loops until it sees this special signal
     #sys.stdout.flush() # Make sure Java can sense this output before Python blocks waiting for input 
-    NumSimulations=parsed_toml["NumSimulations"]
-    AlgorithmToRun=parsed_toml["Algorithm"]["AlgorithmName"]
-    AlgorithmConfig=parsed_toml["Algorithm"]["AlgorithmConfig"]
-    parsed_toml=toml.load(AlgorithmConfig)
-    
+    parsed_toml=toml.load(opt.config)
+    NumSimulations=parsed_toml["num_simulations"]
+    AlgorithmToRun=parsed_toml["algorithm"]
+    AlgorithmConfig=parsed_toml["algorithm_config"]
+    EliteMapConfig=parsed_toml["elite_map_config"]
+    TrialName=parsed_toml["trial_name"]
+    run_trial(NumSimulations,AlgorithmToRun,AlgorithmConfig,EliteMapConfig,TrialName)
     #below needs to be changed
-    print(AlgorithmToRun)
-    if(AlgorithmToRun=="CMAES"):
-        run_cma_es(NumSimulations,mutation_power=parsed_toml["CMAESSetting"]["MutationPower"])
-    if(AlgorithmToRun=="CMAME"):
-        run_cma_me(NumSimulations, mutation_power=parsed_toml["CMAMESetting"]["MutationPower"])
-    if(AlgorithmToRun=="MAPELITES"):
-        run_map_elites(NumSimulations,initial_population=parsed_toml["MAPEliteSetting"]["InitialPopulation"],mutation_power=parsed_toml["MAPEliteSetting"]["MutationPower"])
-    if(AlgorithmToRun=="ISOLineDD"):
-        run_ISOLineDD(NumSimulations,initial_population=parsed_toml["ISOLineDDSetting"]["InitialPopulation"],mutation_power1=parsed_toml["ISOLineDDSetting"]["MutationPower1"],mutation_power2=parsed_toml["ISOLineDDSetting"]["MutationPower2"])
-    print("saved")
+    print("Finished")

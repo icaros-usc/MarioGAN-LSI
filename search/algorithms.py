@@ -13,7 +13,6 @@ num_params = parsed_toml["ModelParameter"]["num_params"]
 boundary_value = parsed_toml["ModelParameter"]["boundary_value"]
 batchSize = parsed_toml["ModelParameter"]["batchSize"]
 nz = parsed_toml["ModelParameter"]["nz"]
-success_map=parsed_toml["LogPaths"]["success_map"]
 records=parsed_toml["LogPaths"]["recordsCSV"]
 
 
@@ -143,39 +142,32 @@ class CMA_ES_Algorithm:
         # Reset the population
         self.population.clear()
 
-class ImprovementEmitter:
 
-    def __init__(self, mutation_power, population_size,feature_map):
-        #self.population_size = int(4.0+math.floor(3.0*math.log(num_params))) * 2
+class CMA_ME_Algorithm:
+
+    def __init__(self, mutation_power, num_to_evaluate, population_size,feature_map):     
+        self.allRecords=pd.DataFrame(columns=['emitterName','latentVector', 'completionPercentage','jumpActionsPerformed','killsTotal','livesLeft','coinsCollected','remainingTime (20-timeSpent)','behavior feature X','behavior feature Y'])
         self.population_size=population_size
-        #print('pop size', self.population_size)
         self.sigma = mutation_power
         self.num_released = 0
-        
         self.population = []
         self.feature_map = feature_map
         self.num_features = len(self.feature_map.feature_ranges)
-        #print('num_features', self.num_features)
-        
+        self.num_to_evaluate = num_to_evaluate
+        self.individuals_evaluated = 0
         self.reset()
+        
 
     def reset(self):
         self.mutation_power = self.sigma
         if len(self.feature_map.elite_map) == 0:
             self.mean = np.asarray([0.0] * num_params)
         else:
-            self.mean = self.feature_map.get_random_elite().param_vector
-        
-        #print('RESET --------------')
-        #print('new mean:', self.mean)
- 
-        # Setup evolution path variables
+            self.mean = self.feature_map.get_random_elite().param_vector  
         self.pc = np.zeros((num_params,), dtype=np.float_)
         self.ps = np.zeros((num_params,), dtype=np.float_)
-
-        # Setup the covariance matrix
         self.C = DecompMatrix(num_params)
-
+    
     def check_stop(self, parents):
         if self.C.condition_number > 1e14:
             return True
@@ -185,6 +177,9 @@ class ImprovementEmitter:
             return True
 
         return False
+
+    def is_running(self):
+        return self.individuals_evaluated < self.num_to_evaluate
 
     def generate_individual(self):
         unscaled_params = \
@@ -196,13 +191,14 @@ class ImprovementEmitter:
         ind.param_vector = unscaled_params
         level=gan_generate(ind.param_vector,batchSize,nz)
         ind.level=level
-        ind.emitter_name="ImprovementEmitter"
 
-
-        self.num_released += 1
         return ind
 
     def return_evaluated_individual(self, ind):
+        ind.make_features()
+        ind.ID = self.individuals_evaluated
+        self.individuals_evaluated += 1
+        self.allRecords.loc[ind.ID]=["CMA-ME-Improvement"]+[ind.param_vector]+ind.statsList+[ind.features[0]]+[ind.features[1]]
         self.population.append(ind)
         if len(self.population) < self.population_size:
             print("return")
@@ -279,50 +275,10 @@ class ImprovementEmitter:
 
         # Reset the population
         self.population.clear()
-
-class CMA_ME_Algorithm:
-
-    def __init__(self, mutation_power, num_to_evaluate, population_size,feature_map):
-        self.emitters = []
-        self.records=[]
-        self.allRecords=pd.DataFrame(columns=['emitterName','latentVector', 'completionPercentage','jumpActionsPerformed','killsTotal','livesLeft','coinsCollected','remainingTime (20-timeSpent)','behavior feature X','behavior feature Y'])
-        
-        self.emitters += [ImprovementEmitter(mutation_power, population_size,feature_map) for i in range(1)]
-        self.records+=[pd.DataFrame(columns=['emitterName','latentVector', 'completionPercentage','jumpActionsPerformed','killsTotal','livesLeft','coinsCollected','remainingTime (20-timeSpent)','behavior feature X','behavior feature Y'])]
-        
-        self.num_to_evaluate = num_to_evaluate
-        self.individuals_evaluated = 0
-        self.feature_map = feature_map
-       
-
-    def is_running(self):
-        return self.individuals_evaluated < self.num_to_evaluate
-
-    def generate_individual(self):
-        
-        pos = 0
-        emitter = self.emitters[0]
-        for i in range(1, len(self.emitters)):
-            if self.emitters[i].num_released < emitter.num_released:
-                emitter = self.emitters[i]
-                pos = i
-        
-        ind = emitter.generate_individual()
-        ind.emitter_id = pos
-        return ind
-
-    def return_evaluated_individual(self, ind):
-        ind.make_features() #make behavior features, now it does nothing
-        ind.ID = self.individuals_evaluated
-        self.individuals_evaluated += 1
-        self.emitters[ind.emitter_id].return_evaluated_individual(ind)
-        self.records[ind.emitter_id].loc[ind.ID]=[ind.emitter_name]+[ind.param_vector]+ind.statsList+[ind.features[0]]+[ind.features[1]]
-        self.allRecords.loc[ind.ID]=[ind.emitter_name]+[ind.param_vector]+ind.statsList+[ind.features[0]]+[ind.features[1]]
         
 
         RecordFrequency=parsed_toml["RecordFrequency"]
         if self.individuals_evaluated % RecordFrequency == 0:
-
             elites = [self.feature_map.elite_map[x] for x in self.feature_map.elite_map]
             if(len(elites)!=0):
                 logFile=open(records+"\\EliteLog.csv","a")
@@ -368,7 +324,6 @@ class MapElitesAlgorithm:
 
     def return_evaluated_individual(self, ind):
 
-        ind.make_features() #now this does nothing
         ind.ID = self.individuals_evaluated
         self.individuals_evaluated += 1
         self.feature_map.add(ind)
