@@ -8,24 +8,23 @@ import csv
 from util.SearchHelper import *
 from util.gan_generator import *
 
-parsed_toml=toml.load("Searching/config/cma_me.tml")
-num_params = parsed_toml["ModelParameter"]["num_params"]
-boundary_value = parsed_toml["ModelParameter"]["boundary_value"]
-batchSize = parsed_toml["ModelParameter"]["batchSize"]
-nz = parsed_toml["ModelParameter"]["nz"]
-records=parsed_toml["LogPaths"]["recordsCSV"]
-
+num_params = 96
+boundary_value = 5.12
+batchSize = 3
+nz = 32
+RecordFrequency=20
 
 class CMA_ES_Algorithm:
 
-    def __init__(self, num_to_evaluate,mutation_power,population_size,feature_map):
+    def __init__(self, num_to_evaluate,mutation_power,population_size,feature_map,trial_name,column_names):
         self.population_size=population_size
         self.num_parents = self.population_size // 2
         self.feature_map=feature_map
-        self.allRecords=pd.DataFrame(columns=['emitterName','latentVector', 'completionPercentage','jumpActionsPerformed','killsTotal','livesLeft','coinsCollected','remainingTime (20-timeSpent)','behavior feature X','behavior feature Y'])
+        self.allRecords=pd.DataFrame(columns=column_names)
         self.mutation_power = mutation_power
         self.num_to_evaluate = num_to_evaluate
         self.individuals_evaluated = 0
+        self.trial_name=trial_name
 
         self.mean = np.asarray([0.0] * num_params)
         self.population = []
@@ -75,18 +74,17 @@ class CMA_ES_Algorithm:
         ind.make_features()
         ind.ID = self.individuals_evaluated
         self.individuals_evaluated += 1
-        self.allRecords.loc[ind.ID]=["CMA-ES"]+[ind.param_vector]+ind.statsList+[ind.features[0]]+[ind.features[1]]
+        self.allRecords.loc[ind.ID]=["CMA-ES"]+[ind.param_vector]+ind.statsList+list(ind.features)
 
-        RecordFrequency=parsed_toml["RecordFrequency"]
         if self.individuals_evaluated % RecordFrequency == 0:
 
             elites = [self.feature_map.elite_map[x] for x in self.feature_map.elite_map]
             if(len(elites)!=0):
-                logFile=open(records+"\\EliteLog.csv","a")
+                logFile=open("logs\\"+self.trial_name+"_elites_freq"+str(RecordFrequency)+".csv","a")
                 rowData=[]
                 for x in elites:
                     currElite=[x.ID]
-                    currElite+=self.allRecords.loc[x.ID,["emitterName",'completionPercentage',"behavior feature X","behavior feature Y"]].tolist()
+                    currElite+=self.allRecords.loc[x.ID].tolist()
                     rowData.append(currElite)
                 wr = csv.writer(logFile, dialect='excel')
                 wr.writerow(rowData)
@@ -145,8 +143,8 @@ class CMA_ES_Algorithm:
 
 class CMA_ME_Algorithm:
 
-    def __init__(self, mutation_power, num_to_evaluate, population_size,feature_map):     
-        self.allRecords=pd.DataFrame(columns=['emitterName','latentVector', 'completionPercentage','jumpActionsPerformed','killsTotal','livesLeft','coinsCollected','remainingTime (20-timeSpent)','behavior feature X','behavior feature Y'])
+    def __init__(self, mutation_power, num_to_evaluate, population_size,feature_map,trial_name,column_names):     
+        self.allRecords=pd.DataFrame(columns=column_names)
         self.population_size=population_size
         self.sigma = mutation_power
         self.num_released = 0
@@ -155,6 +153,7 @@ class CMA_ME_Algorithm:
         self.num_features = len(self.feature_map.feature_ranges)
         self.num_to_evaluate = num_to_evaluate
         self.individuals_evaluated = 0
+        self.trial_name=trial_name
         self.reset()
         
 
@@ -198,7 +197,7 @@ class CMA_ME_Algorithm:
         ind.make_features()
         ind.ID = self.individuals_evaluated
         self.individuals_evaluated += 1
-        self.allRecords.loc[ind.ID]=["CMA-ME-Improvement"]+[ind.param_vector]+ind.statsList+[ind.features[0]]+[ind.features[1]]
+        self.allRecords.loc[ind.ID]=["CMA-ME-Improvement"]+[ind.param_vector]+ind.statsList+list(ind.features)
         self.population.append(ind)
         if len(self.population) < self.population_size:
             print("return")
@@ -276,16 +275,14 @@ class CMA_ME_Algorithm:
         # Reset the population
         self.population.clear()
         
-
-        RecordFrequency=parsed_toml["RecordFrequency"]
         if self.individuals_evaluated % RecordFrequency == 0:
             elites = [self.feature_map.elite_map[x] for x in self.feature_map.elite_map]
             if(len(elites)!=0):
-                logFile=open(records+"\\EliteLog.csv","a")
+                logFile=open("logs\\"+self.trial_name+"_elites_freq"+str(RecordFrequency)+".csv","a")
                 rowData=[]
                 for x in elites:
                     currElite=[x.ID]
-                    currElite+=self.allRecords.loc[x.ID,["emitterName","completionPercentage","behavior feature X","behavior feature Y"]].tolist()
+                    currElite+=self.allRecords.loc[x.ID].tolist()
                     rowData.append(currElite)
                 wr = csv.writer(logFile, dialect='excel')
                 wr.writerow(rowData)
@@ -293,14 +290,15 @@ class CMA_ME_Algorithm:
 
 class MapElitesAlgorithm:
 
-    def __init__(self, mutation_power, initial_population, num_to_evaluate, feature_map):
+    def __init__(self, mutation_power, initial_population, num_to_evaluate, feature_map,trial_name,column_names):
         self.num_to_evaluate = num_to_evaluate
         self.initial_population = initial_population
         self.individuals_evaluated = 0
         self.feature_map = feature_map
         self.mutation_power = mutation_power
-        self.allRecords=pd.DataFrame(columns=['emitterName','latentVector', 'completionPercentage','jumpActionsPerformed','killsTotal','livesLeft','coinsCollected','remainingTime (20-timeSpent)','behavior feature X','behavior feature Y'])
-        
+        self.allRecords=pd.DataFrame(columns=column_names)
+        self.trial_name=trial_name
+
     def is_running(self):
         return self.individuals_evaluated < self.num_to_evaluate
 
@@ -327,19 +325,18 @@ class MapElitesAlgorithm:
         ind.ID = self.individuals_evaluated
         self.individuals_evaluated += 1
         self.feature_map.add(ind)
-        self.allRecords.loc[ind.ID]=["MAP-Elite"]+[ind.param_vector]+ind.statsList+[ind.features[0]]+[ind.features[1]]
+        self.allRecords.loc[ind.ID]=["MAP-Elite"]+[ind.param_vector]+ind.statsList+list(ind.features)
 
-        print("Evaluated One Individual")
-        
-        RecordFrequency=parsed_toml["RecordFrequency"]
+        #print("Evaluated One Individual")
+    
         if self.individuals_evaluated % RecordFrequency == 0:
             elites = [self.feature_map.elite_map[x] for x in self.feature_map.elite_map]
             if(len(elites)!=0):
-                logFile=open("records\\EliteLog.csv","a")
+                logFile=open("logs\\"+self.trial_name+"_elites_freq"+str(RecordFrequency)+".csv","a")
                 rowData=[]
                 for x in elites:
                     currElite=[x.ID]
-                    currElite+=self.allRecords.loc[x.ID,["emitterName",'completionPercentage',"behavior feature X","behavior feature Y"]].tolist()
+                    currElite+=self.allRecords.loc[x.ID].tolist()
                     rowData.append(currElite)
                 wr = csv.writer(logFile, dialect='excel')
                 wr.writerow(rowData)
@@ -347,15 +344,16 @@ class MapElitesAlgorithm:
 
 class ISOLineDDAlgorithm:
 
-    def __init__(self, mutation_power1,mutation_power2, initial_population, num_to_evaluate, feature_map):
+    def __init__(self, mutation_power1,mutation_power2, initial_population, num_to_evaluate, feature_map,trial_name,column_names):
         self.num_to_evaluate = num_to_evaluate
         self.initial_population = initial_population
         self.individuals_evaluated = 0
         self.feature_map = feature_map
         self.mutation_power1 = mutation_power1
         self.mutation_power2=mutation_power2
-        self.allRecords=pd.DataFrame(columns=['emitterName','latentVector', 'completionPercentage','jumpActionsPerformed','killsTotal','livesLeft','coinsCollected','remainingTime (20-timeSpent)','behavior feature X','behavior feature Y'])
-        
+        self.allRecords=pd.DataFrame(columns=column_names)
+        self.trial_name=trial_name
+
     def is_running(self):
         return self.individuals_evaluated < self.num_to_evaluate
 
@@ -389,19 +387,18 @@ class ISOLineDDAlgorithm:
         self.individuals_evaluated += 1
         
         self.feature_map.add(ind)
-        self.allRecords.loc[ind.ID]=["ISOLine-DD"]+[ind.param_vector]+ind.statsList+[ind.features[0]]+[ind.features[1]]
+        self.allRecords.loc[ind.ID]=["ISOLine-DD"]+[ind.param_vector]+ind.statsList+list(ind.features)
 
-        print("Evaluated One Individual")
+        #print("Evaluated One Individual")
        
-        RecordFrequency=parsed_toml["RecordFrequency"]
         if self.individuals_evaluated % RecordFrequency == 0:
             elites = [self.feature_map.elite_map[x] for x in self.feature_map.elite_map]
             if(len(elites)!=0):
-                logFile=open("records\\EliteLog.csv","a")
+                logFile=open("logs\\"+self.trial_name+"_elites_freq"+str(RecordFrequency)+".csv","a")
                 rowData=[]
                 for x in elites:
                     currElite=[x.ID]
-                    currElite+=self.allRecords.loc[x.ID,["emitterName",'completionPercentage',"behavior feature X","behavior feature Y"]].tolist()
+                    currElite+=self.allRecords.loc[x.ID].tolist()
                     rowData.append(currElite)
                 wr = csv.writer(logFile, dialect='excel')
                 wr.writerow(rowData)

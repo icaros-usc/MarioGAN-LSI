@@ -5,20 +5,19 @@ from torch.autograd import Variable
 import util.models.dcgan as dcgan
 import toml
 
-parsed_toml=toml.load("Searching/config/cma_me.tml")
-num_params = parsed_toml["ModelParameter"]["num_params"]
-boundary_value = parsed_toml["ModelParameter"]["boundary_value"]
-batchSize = parsed_toml["ModelParameter"]["batchSize"]
-nz = parsed_toml["ModelParameter"]["nz"]  # Dimensionality of latent vector
+num_params = 96
+boundary_value = 5.12
+nz = 32
 
-imageSize = parsed_toml["ModelParameter"]["imageSize"]
-ngf = parsed_toml["ModelParameter"]["ngf"]
-ngpu = parsed_toml["ModelParameter"]["ngpu"]
-n_extra_layers = parsed_toml["ModelParameter"]["n_extra_layers"]
+imageSize = 64
+ngf = 64
+ngpu = 1
+n_extra_layers = 0
+model_path="GANTrain/samples/netG_epoch_4999_5008.pth"
+features = len(json.load(open('GANTrain/index2str.json')))
 
-features = parsed_toml["ModelParameter"]["features"]
 generator = dcgan.DCGAN_G(imageSize, nz, features, ngf, ngpu, n_extra_layers)
-generator.load_state_dict(torch.load(parsed_toml["GANModelPath"], map_location=lambda storage, loc: storage))
+generator.load_state_dict(torch.load(model_path, map_location=lambda storage, loc: storage))
 
 def gan_generate(x,batchSize,nz):
     latent_vector = torch.FloatTensor(x).view(batchSize, nz, 1,

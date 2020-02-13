@@ -7,15 +7,10 @@ from numpy.linalg import eig
 import json
 
 
-parsed_toml=toml.load("Searching/config/cma_me.tml")
-num_params = parsed_toml["ModelParameter"]["num_params"]
-boundary_value = parsed_toml["ModelParameter"]["boundary_value"]
-batchSize = parsed_toml["ModelParameter"]["batchSize"]
-nz = parsed_toml["ModelParameter"]["nz"]
-success_map=parsed_toml["LogPaths"]["success_map"]
-records=parsed_toml["LogPaths"]["recordsCSV"]
+boundary_value = 5.12
+nz = 32
 
-with open('GANTraining/index2str.json') as f:
+with open('GANTrain/index2str.json') as f:
   index2str = json.load(f)
   
 def get_char(x):

@@ -15,7 +15,7 @@ def calc_higher_level_non_empty_blocks(ind,result):
     return num_non_empty
 
 def calc_num_enemies(ind,result):
-    ENEMY=[3,4,5]
+    ENEMY=[2,3,4,5]
     im=np.array(json.loads(ind.level))
     num_enemies =  len (im[np.isin(im,ENEMY)])
     return num_enemies
