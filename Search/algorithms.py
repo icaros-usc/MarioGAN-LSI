@@ -402,4 +402,4 @@ class ISOLineDDAlgorithm:
                     rowData.append(currElite)
                 wr = csv.writer(logFile, dialect='excel')
                 wr.writerow(rowData)
-                logFile.close()   
+                logFile.close() 

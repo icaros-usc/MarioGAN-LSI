@@ -5,7 +5,7 @@ sys.path.append(os.getcwd())
 from util import SearchHelper
 from util import bc_calculate
 
-os.environ['CLASSPATH'] = "/home/icaros/Projects/Mario-AI-Framework"
+os.environ['CLASSPATH'] = "E:\6thSemester\Mario-AI-Framework"
 
 
 import pandas as pd
