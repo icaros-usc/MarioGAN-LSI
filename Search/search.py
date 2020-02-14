@@ -5,7 +5,7 @@ sys.path.append(os.getcwd())
 from util import SearchHelper
 from util import bc_calculate
 
-os.environ['CLASSPATH'] = "E:\6thSemester\Mario-AI-Framework"
+os.environ['CLASSPATH'] = "E:/6thSemester/Mario-AI-Framework/src"
 
 
 import pandas as pd
@@ -47,6 +47,7 @@ opt = parser.parse_args()
 if not os.path.exists("logs"):
     os.mkdir("logs")
 
+global EliteMapConfig
 EliteMapConfig=[]
 
 
@@ -135,12 +136,13 @@ if __name__ == '__main__':
     print("Finished All Trials")
 """
 
-def search(trial_index,experiment_toml):
+def start_search(trial_index,experiment_toml):
     experiment_toml=experiment_toml["Trials"][trial_index]
     trial_toml=toml.load(experiment_toml["trial_config"])
     NumSimulations=trial_toml["num_simulations"]
     AlgorithmToRun=trial_toml["algorithm"]
     AlgorithmConfig=toml.load(trial_toml["algorithm_config"])
+    global EliteMapConfig
     EliteMapConfig=toml.load(trial_toml["elite_map_config"])
     TrialName=trial_toml["trial_name"]+str(trial_index)
     run_trial(NumSimulations,AlgorithmToRun,AlgorithmConfig,EliteMapConfig,TrialName)

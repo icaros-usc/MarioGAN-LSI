@@ -1,11 +1,11 @@
 GAN_model_path = "GANTrain/samples/netG_epoch_4999_5008.pth"
 
-[[Trials]
+[[Trials]]
 num_trials=1
 trial_config= "Search/config/trial/trial1.tml"
 
 [[Trials]]
 num_trials=1
-trial_config="Search/config/trial/trial2.html"
+trial_config="Search/config/trial/trial2.tml"
 
 

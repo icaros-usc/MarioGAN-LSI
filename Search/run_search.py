@@ -1,6 +1,6 @@
 import toml
 import argparse
-import search
+from search import *
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-w','--workerID',help='the workerID of the worker to be called',type=int,required=True)
@@ -17,7 +17,7 @@ else:
         num_list.append(i["num_trials"])
     for trial_index in range(len(num_list)):
         if workerID<num_list[trial_index]:
-            search(trial_index,experiment_toml)
+            start_search(trial_index,experiment_toml)
             break
         workerID=workerID-num_list[trial_index]
     if trial_index == len(num_list):
