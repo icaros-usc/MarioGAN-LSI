@@ -1,0 +1,5 @@
+algorithm = "CMAES"
+trial_name="CMAES"
+num_simulations=40
+algorithm_config = "Search/config/algorithms/cma_es.tml"
+elite_map_config = "Search/config/elite_map/elite_map1.tml"

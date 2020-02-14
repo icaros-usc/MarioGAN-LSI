@@ -7,38 +7,25 @@ from util import bc_calculate
 
 os.environ['CLASSPATH'] = "E:/6thSemester/Mario-AI-Framework/src"
 
-import matplotlib
-matplotlib.use("agg")
-#import matplotlib.pyplot as plt
-import math
-import random
+
 import pandas as pd
-import seaborn as sns
 import numpy as np
 from numpy.linalg import eig
 import torch
-import torchvision.utils as vutils
+#import torchvision.utils as vutils
 from torch.autograd import Variable
 
 import toml
-import sys
 import json
 import numpy
 import util.models.dcgan as dcgan
 import cma
-import random
-import math
-import matplotlib.pyplot as plt
-import os
-import csv
-#os.chdir("./DagstuhlGAN")
 import torch
-import torchvision.utils as vutils
+#import torchvision.utils as vutils
 from torch.autograd import Variable
 import json
 import numpy
 import util.models.dcgan as dcgan
-#import matplotlib.pyplot as plt
 import math
 import random
 from collections import OrderedDict
@@ -50,10 +37,12 @@ from jnius import autoclass
 MarioGame = autoclass('engine.core.MarioGame')
 Agent = autoclass('agents.robinBaumgarten.Agent')
 
+"""
 import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument('-c','--config', help='path of experiment config file',required=True)
 opt = parser.parse_args()
+"""
 
 if not os.path.exists("logs"):
     os.mkdir("logs")
@@ -127,6 +116,7 @@ def run_trial(num_to_evaluate,algorithm_name,algorithm_config,elite_map_config,t
         algorithm_instance.return_evaluated_individual(ind)
     algorithm_instance.allRecords.to_csv("logs\\"+trial_name+"_all_simulations.csv")
 
+"""
 if __name__ == '__main__':
     print("READY") # Java loops until it sees this special signal
     #sys.stdout.flush() # Make sure Java can sense this output before Python blocks waiting for input 
@@ -143,3 +133,16 @@ if __name__ == '__main__':
         #below needs to be changed
         print("Finished One Trial")
     print("Finished All Trials")
+"""
+
+def search(trial_index,experiment_toml):
+    experiment_toml=experiment_toml["Trials"][trial_index]
+    trial_toml=toml.load(experiment_toml["trial_config"])
+    NumSimulations=trial_toml["num_simulations"]
+    AlgorithmToRun=trial_toml["algorithm"]
+    AlgorithmConfig=toml.load(trial_toml["algorithm_config"])
+    EliteMapConfig=toml.load(trial_toml["elite_map_config"])
+    TrialName=trial_toml["trial_name"]+str(trial_index)
+    run_trial(NumSimulations,AlgorithmToRun,AlgorithmConfig,EliteMapConfig,TrialName)
+    print("Finished One Trial")
+	
