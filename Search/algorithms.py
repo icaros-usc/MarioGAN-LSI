@@ -80,7 +80,7 @@ class CMA_ES_Algorithm:
 
             elites = [self.feature_map.elite_map[x] for x in self.feature_map.elite_map]
             if(len(elites)!=0):
-                logFile=open("logs\\"+self.trial_name+"_elites_freq"+str(RecordFrequency)+".csv","a")
+                logFile=open("logs/"+self.trial_name+"_elites_freq"+str(RecordFrequency)+".csv","a")
                 rowData=[]
                 for x in elites:
                     currElite=[x.ID]
