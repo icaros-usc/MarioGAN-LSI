@@ -4,8 +4,9 @@ print(os.getcwd())
 sys.path.append(os.getcwd())
 from util import SearchHelper
 from util import bc_calculate
-
-os.environ['CLASSPATH'] = "/home/tehqin/Projects/MarioGAN-LSI/Mario.jar"
+import pathlib
+os.environ['CLASSPATH']=os.path.join(pathlib.Path().absolute(),"Mario.jar")
+#os.environ['CLASSPATH'] = "/home/tehqin/Projects/MarioGAN-LSI/Mario.jar"
 
 
 import pandas as pd
