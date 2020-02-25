@@ -5,7 +5,7 @@ sys.path.append(os.getcwd())
 from util import SearchHelper
 from util import bc_calculate
 
-os.environ['CLASSPATH'] = "E:/6thSemester/Mario-AI-Framework/src"
+os.environ['CLASSPATH'] = "/home/tehqin/Projects/MarioGAN-LSI/Mario.jar"
 
 
 import pandas as pd
@@ -115,7 +115,7 @@ def run_trial(num_to_evaluate,algorithm_name,algorithm_config,elite_map_config,t
         ind = algorithm_instance.generate_individual()
         ind.fitness = evaluate(ind)
         algorithm_instance.return_evaluated_individual(ind)
-    algorithm_instance.allRecords.to_csv("logs\\"+trial_name+"_all_simulations.csv")
+    algorithm_instance.allRecords.to_csv("logs/"+trial_name+"_all_simulations.csv")
 
 """
 if __name__ == '__main__':
