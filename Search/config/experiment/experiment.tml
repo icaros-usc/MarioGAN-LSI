@@ -1,4 +1,4 @@
-GAN_model_path = "GANTrain/samples/netG_epoch_4999_5008.pth"
+GAN_model_path = "GANTrain/samples/netG_epoch_1999_5008.pth"
 
 [[Trials]]
 num_trials=1

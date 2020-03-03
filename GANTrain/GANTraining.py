@@ -16,6 +16,7 @@ from torch.autograd import Variable
 import models.dcgan as dcgan
 import os
 import GetLevel
+import json
 
 os.chdir("GANTraining")
 print(os.getcwd())
@@ -260,6 +261,14 @@ for epoch in range(opt.niter):
                  errD.data[0], errG.data[0], errD_real.data[0], errD_fake.data[0]))
 
     if epoch % 500 == 499 or epoch == opt.niter - 1:  # was 500
+        fake = netG(Variable(fixed_noise, volatile=True))
+        im = fake.data[:,:,:16,:56].cpu().numpy()
+        im=np.argmax(im,axis=1)
+
+        f=open('{0}/netG_epoch_{1}_{2}.pth'.format(opt.experiment, epoch, opt.seed),"w")
+        f.write(json.dumps(im[0].tolist()))
+        f.close()
+        
         torch.save(netG.state_dict(), '{0}/netG_epoch_{1}_{2}.pth'.format(opt.experiment, epoch, opt.seed))
 
     # do checkpointing
