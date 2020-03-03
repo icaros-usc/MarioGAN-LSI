@@ -99,7 +99,7 @@ X_onehot = np.rollaxis(X_onehot, 3, 1)
 
 X_train = np.zeros((X.shape[0], z_dims, map_size, map_size)) * 2
 
-X_train[:, 2, :, :] = 1.0  # Fill with empty space
+X_train[:, 0, :, :] = 1.0  # Fill with empty space
 
 # Pad part of level so its a square
 X_train[:X.shape[0], :, :X.shape[1], :X.shape[2]] = X_onehot
