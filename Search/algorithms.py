@@ -10,7 +10,7 @@ from util.gan_generator import *
 
 num_params = 96
 boundary_value = 5.12
-batchSize = 3
+batchSize = 32
 nz = 32
 RecordFrequency=20
 

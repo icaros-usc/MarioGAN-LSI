@@ -19,6 +19,7 @@ import math
 import matplotlib.pyplot as plt
 import os
 
+batchSize = 32
 num_params = 96
 boundary_value = 5.12
 nz = 32
@@ -61,16 +62,17 @@ def gan_generate(x,batchSize,nz):
 if __name__ == '__main__':
     
     fixed_noise = torch.FloatTensor(batchSize, nz, 1, 1).normal_(0, 1)
-    level=gan_generate(fixed_noise)
+    level=gan_generate(fixed_noise,batchSize,nz)
     
-    with open ("GANTrain/fake_level_epoch_999_8815.json") as f:
-        level=json.load(f)
+    #comment the below 2 lines if want to generate levels randomly
+    #with open ("GANTrain/samples/fake_level_epoch_999_8815.json") as f:
+    #    level=json.dumps(json.load(f))
     
     realLevel=to_level(level)
     agent = Agent()
     game = MarioGame()
     result = game.runGame(agent, realLevel, 20, 0, True)
-
+    print(realLevel)
     #result = game.playGame(output, 200, 0)
     #print(result)
     print("****************************************************************")
