@@ -28,7 +28,7 @@ imageSize = 64
 ngf = 64
 ngpu = 1
 n_extra_layers = 0
-model_path="GANTrain/samples/netG_epoch_999_8815.pth"
+model_path="GANTrain/samples/netG_epoch_4999_7684.pth"
 features = len(json.load(open('GANTrain/index2str.json')))
 
 generator = dcgan.DCGAN_G(imageSize, nz, features, ngf, ngpu, n_extra_layers)
@@ -62,7 +62,7 @@ def gan_generate(x,batchSize,nz):
 if __name__ == '__main__':
     
     fixed_noise = torch.FloatTensor(batchSize, nz, 1, 1).normal_(0, 1)
-    level=gan_generate(fixed_noise,batchSize,nz)
+    level=gan_generate(fixed_noise,32,32)
     
     #comment the below 2 lines if want to generate levels randomly
     #with open ("GANTrain/samples/fake_level_epoch_999_8815.json") as f:

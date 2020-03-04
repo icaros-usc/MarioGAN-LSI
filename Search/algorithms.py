@@ -10,7 +10,7 @@ from util.gan_generator import *
 
 num_params = 96
 boundary_value = 5.12
-batchSize = 32
+batchSize = 3
 nz = 32
 RecordFrequency=20
 
@@ -56,7 +56,7 @@ class CMA_ES_Algorithm:
     def is_running(self):
         return self.individuals_evaluated < self.num_to_evaluate
 
-    def generate_individual(self):
+    def generate_individual(self,model_path):
         unscaled_params = \
             [self.mutation_power * eigenval ** 0.5 * gaussian() \
                 for eigenval in self.C.eigenvalues]
@@ -65,7 +65,7 @@ class CMA_ES_Algorithm:
         ind = Individual()
         ind.param_vector = unscaled_params
         #level,num_non_empty,num_enemies=gan_generate(ind.param_vector)
-        level=gan_generate(ind.param_vector,batchSize,nz)
+        level=gan_generate(ind.param_vector,batchSize,nz,model_path)
         ind.level=level
         #ind.features = (num_non_empty, num_enemies)
         return ind
@@ -180,7 +180,7 @@ class CMA_ME_Algorithm:
     def is_running(self):
         return self.individuals_evaluated < self.num_to_evaluate
 
-    def generate_individual(self):
+    def generate_individual(self,model_path):
         unscaled_params = \
             [self.mutation_power * eigenval ** 0.5 * gaussian() \
                 for eigenval in self.C.eigenvalues]
@@ -188,7 +188,7 @@ class CMA_ME_Algorithm:
         unscaled_params = self.mean + np.array(unscaled_params)
         ind = Individual()
         ind.param_vector = unscaled_params
-        level=gan_generate(ind.param_vector,batchSize,nz)
+        level=gan_generate(ind.param_vector,batchSize,nz,model_path)
         ind.level=level
 
         return ind
@@ -302,7 +302,7 @@ class MapElitesAlgorithm:
     def is_running(self):
         return self.individuals_evaluated < self.num_to_evaluate
 
-    def generate_individual(self):
+    def generate_individual(self,model_path):
         
         ind = Individual()
         if self.individuals_evaluated < self.initial_population:
@@ -315,7 +315,7 @@ class MapElitesAlgorithm:
                 [parent.param_vector[i] + self.mutation_power * gaussian() for i in range(num_params)]
             ind.param_vector = unscaled_params
 
-        level=gan_generate(ind.param_vector,batchSize,nz)
+        level=gan_generate(ind.param_vector,batchSize,nz,model_path)
         ind.level=level
  
         return ind
@@ -357,7 +357,7 @@ class ISOLineDDAlgorithm:
     def is_running(self):
         return self.individuals_evaluated < self.num_to_evaluate
 
-    def generate_individual(self):
+    def generate_individual(self,model_path):
         
         ind = Individual()
         if self.individuals_evaluated < self.initial_population:
@@ -376,7 +376,7 @@ class ISOLineDDAlgorithm:
             unscaled_params = \
                 [parent1.param_vector[i] + self.mutation_power1 * gaussian() + self.mutation_power2 * (parent1.param_vector[i]-parent2.param_vector[i]) * gaussian() for i in range(num_params)]
             ind.param_vector = unscaled_params
-        level=gan_generate(ind.param_vector,batchSize,nz)
+        level=gan_generate(ind.param_vector,batchSize,nz,model_path)
         ind.level=level
         return ind
 

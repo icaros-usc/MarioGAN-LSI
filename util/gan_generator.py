@@ -13,15 +13,14 @@ imageSize = 64
 ngf = 64
 ngpu = 1
 n_extra_layers = 0
-model_path="GANTrain/samples/netG_epoch_4999_5008.pth"
 features = len(json.load(open('GANTrain/index2str.json')))
 
 generator = dcgan.DCGAN_G(imageSize, nz, features, ngf, ngpu, n_extra_layers)
-generator.load_state_dict(torch.load(model_path, map_location=lambda storage, loc: storage))
 
-def gan_generate(x,batchSize,nz):
-    latent_vector = torch.FloatTensor(x).view(batchSize, nz, 1,
-                                              1)
+
+def gan_generate(x,batchSize,nz,model_path):
+    generator.load_state_dict(torch.load(model_path, map_location=lambda storage, loc: storage))
+    latent_vector = torch.FloatTensor(x).view(batchSize,nz, 1,1)
     with torch.no_grad():
         levels = generator(Variable(latent_vector))
     levels.data = levels.data[:, :, :16, :56]
