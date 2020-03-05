@@ -1,5 +1,5 @@
 GAN_model_path = "GANTrain/samples/netG_epoch_4999_7684.pth"
-
+Visualize=false
 [[Trials]]
 num_trials=1
 trial_config= "Search/config/trial/trial1.tml"

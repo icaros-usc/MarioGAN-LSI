@@ -11,6 +11,7 @@ opt = parser.parse_args()
 
 experiment_toml=toml.load(opt.config)
 model_path=experiment_toml["GAN_model_path"]
+visualize=experiment_toml["Visualize"]
 num_list=[]
 workerID=opt.workerID
 if workerID < 0:
@@ -20,7 +21,8 @@ else:
         num_list.append(i["num_trials"])
     for trial_index in range(len(num_list)):
         if workerID<num_list[trial_index]:
-            start_search(trial_index,experiment_toml,model_path)
+            start_search(trial_index,experiment_toml,model_path,visualize)
+            print("workerID "+str(opt.workerID)+" finished")
             break
         workerID=workerID-num_list[trial_index]
     if trial_index == len(num_list):

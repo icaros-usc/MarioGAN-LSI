@@ -54,12 +54,12 @@ EliteMapConfig=[]
 
 
 
-def eval_mario(ind):
+def eval_mario(ind,visualize):
     realLevel=to_level(ind.level)
     JString = autoclass('java.lang.String')
     agent = Agent()
     game = MarioGame()
-    result = game.runGame(agent, JString(realLevel), 20, 0, False)
+    result = game.runGame(agent, JString(realLevel), 20, 0, visualize)
     #print(result)
     messageReceived=str(result.getCompletionPercentage())+","
     messageReceived+=str(result.getNumJumps())+","
@@ -87,7 +87,7 @@ evaluate = eval_mario
 
 
 
-def run_trial(num_to_evaluate,algorithm_name,algorithm_config,elite_map_config,trial_name,model_path):
+def run_trial(num_to_evaluate,algorithm_name,algorithm_config,elite_map_config,trial_name,model_path,visualize):
     feature_ranges=[]
     column_names=['emitterName','latentVector', 'completionPercentage','jumpActionsPerformed','killsTotal','livesLeft','coinsCollected','remainingTime (20-timeSpent)']
     for bc in elite_map_config["Map"]["Features"]:
@@ -113,10 +113,13 @@ def run_trial(num_to_evaluate,algorithm_name,algorithm_config,elite_map_config,t
         initial_population=algorithm_config["initial_population"]
         algorithm_instance=ISOLineDDAlgorithm(mutation_power1, mutation_power2,initial_population, num_to_evaluate, feature_map,trial_name,column_names)
     
+    simulation=1
     while algorithm_instance.is_running():
         ind = algorithm_instance.generate_individual(model_path)
-        ind.fitness = evaluate(ind)
+        ind.fitness = evaluate(ind,visualize)
         algorithm_instance.return_evaluated_individual(ind)
+        print(str(simulation)+"/"+str(num_to_evaluate)+" simulations finished")
+        simulation=simulation+1
     algorithm_instance.allRecords.to_csv("logs/"+trial_name+"_all_simulations.csv")
 
 """
@@ -138,7 +141,7 @@ if __name__ == '__main__':
     print("Finished All Trials")
 """
 
-def start_search(trial_index,experiment_toml,model_path):
+def start_search(trial_index,experiment_toml,model_path,visualize):
     experiment_toml=experiment_toml["Trials"][trial_index]
     trial_toml=toml.load(experiment_toml["trial_config"])
     NumSimulations=trial_toml["num_simulations"]
@@ -147,6 +150,6 @@ def start_search(trial_index,experiment_toml,model_path):
     global EliteMapConfig
     EliteMapConfig=toml.load(trial_toml["elite_map_config"])
     TrialName=trial_toml["trial_name"]+str(trial_index)
-    run_trial(NumSimulations,AlgorithmToRun,AlgorithmConfig,EliteMapConfig,TrialName,model_path)
+    run_trial(NumSimulations,AlgorithmToRun,AlgorithmConfig,EliteMapConfig,TrialName,model_path,visualize)
     print("Finished One Trial")
 	

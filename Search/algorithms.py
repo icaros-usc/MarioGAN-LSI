@@ -200,7 +200,6 @@ class CMA_ME_Algorithm:
         self.allRecords.loc[ind.ID]=["CMA-ME-Improvement"]+[ind.param_vector]+ind.statsList+list(ind.features)
         self.population.append(ind)
         if len(self.population) < self.population_size:
-            print("return")
             return
 
         # Only filter by this generation
@@ -214,7 +213,7 @@ class CMA_ME_Algorithm:
 
         # Only update if there are parents
         if num_parents > 0:
-            print("did improve")
+            #print("did improve")
             #sys.stdout.flush()
             parents = sorted(parents, key=lambda x: x.delta)[::-1]
 
@@ -267,8 +266,6 @@ class CMA_ME_Algorithm:
             cn, sum_square_ps = cs / damps, sum(x**2 for x in self.ps)
             self.mutation_power *= math.exp(min(1, cn * (sum_square_ps / num_params - 1) / 2))
 
-        else:
-            print("no improve")
         if needs_restart:
             self.reset()
 
