@@ -21,7 +21,7 @@ else:
         num_list.append(i["num_trials"])
     for trial_index in range(len(num_list)):
         if workerID<num_list[trial_index]:
-            start_search(trial_index,experiment_toml,model_path,visualize)
+            start_search(workerID,experiment_toml,model_path,visualize)
             print("workerID "+str(opt.workerID)+" finished")
             break
         workerID=workerID-num_list[trial_index]

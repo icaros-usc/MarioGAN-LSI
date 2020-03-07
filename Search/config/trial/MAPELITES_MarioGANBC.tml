@@ -1,0 +1,5 @@
+algorithm = "MAPELITES"
+trial_name="MAPELITES"
+num_simulations=10000
+algorithm_config = "Search/config/algorithms/map_elites.tml"
+elite_map_config = "Search/config/elite_map/mario_gan_BC.tml"

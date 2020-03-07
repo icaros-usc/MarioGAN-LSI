@@ -7,5 +7,4 @@ high=39
 name="calc_num_enemies"
 low=0
 high=19
-ENEMY = [4,5,6]
 
