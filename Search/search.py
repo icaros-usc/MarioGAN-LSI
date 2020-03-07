@@ -5,7 +5,8 @@ sys.path.append(os.getcwd())
 from util import SearchHelper
 from util import bc_calculate
 import pathlib
-os.environ['CLASSPATH']=os.path.join(pathlib.Path().absolute(),"Mario.jar")
+print('AAAAAH', str(pathlib.Path().absolute()))
+os.environ['CLASSPATH']=os.path.join(str(pathlib.Path().absolute()),"Mario.jar")
 #os.environ['CLASSPATH'] = "/home/tehqin/Projects/MarioGAN-LSI/Mario.jar"
 
 
