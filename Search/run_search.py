@@ -13,7 +13,7 @@ experiment_toml=toml.load(opt.config)
 model_path=experiment_toml["GAN_model_path"]
 visualize=experiment_toml["Visualize"]
 num_list=[]
-workerID=opt.workerID
+workerID=opt.workerID-1
 if workerID < 0:
     print("workerID should be greater than or equal to 0")
 else:
@@ -21,7 +21,7 @@ else:
         num_list.append(i["num_trials"])
     for trial_index in range(len(num_list)):
         if workerID<num_list[trial_index]:
-            start_search(workerID,experiment_toml,model_path,visualize)
+            start_search(workerID+1,trial_index,experiment_toml,model_path,visualize)
             print("workerID "+str(opt.workerID)+" finished")
             break
         workerID=workerID-num_list[trial_index]

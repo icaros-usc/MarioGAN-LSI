@@ -142,7 +142,7 @@ if __name__ == '__main__':
     print("Finished All Trials")
 """
 
-def start_search(trial_index,experiment_toml,model_path,visualize):
+def start_search(sim_number,trial_index,experiment_toml,model_path,visualize):
     experiment_toml=experiment_toml["Trials"][trial_index]
     trial_toml=toml.load(experiment_toml["trial_config"])
     NumSimulations=trial_toml["num_simulations"]
@@ -150,7 +150,7 @@ def start_search(trial_index,experiment_toml,model_path,visualize):
     AlgorithmConfig=toml.load(trial_toml["algorithm_config"])
     global EliteMapConfig
     EliteMapConfig=toml.load(trial_toml["elite_map_config"])
-    TrialName=trial_toml["trial_name"]+str(trial_index)
+    TrialName=trial_toml["trial_name"]+"_sim"+str(sim_number)
     run_trial(NumSimulations,AlgorithmToRun,AlgorithmConfig,EliteMapConfig,TrialName,model_path,visualize)
     print("Finished One Trial")
 	
