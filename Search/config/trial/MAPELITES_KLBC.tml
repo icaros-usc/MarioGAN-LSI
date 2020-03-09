@@ -1,0 +1,5 @@
+algorithm = "MAPELITES"
+trial_name="MAPELITES_KLBC"
+num_simulations=10000
+algorithm_config = "Search/config/algorithms/map_elites.tml"
+elite_map_config = "Search/config/elite_map/KL_BC.tml"

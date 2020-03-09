@@ -3,6 +3,7 @@ import math
 import os
 import json
 import toml
+from util.SearchHelper import *
 
 
 def calc_higher_level_non_empty_blocks(ind,result):
@@ -65,3 +66,53 @@ def calc_tp_kldiv(test_count, train_count, epsilon = 1e-6):
         q_dash = mq_dict[x] / mq_total
         value += p_dash * math.log(p_dash/q_dash)
     return value
+
+#get the count for level 1 [:,:56]
+f=open("../Mario-AI-Framework/levels/original/lvl-1.txt")
+lvl=f.readlines()
+level = []
+for l in lvl:
+    row=[]
+    if len(l.strip()) > 0:
+        for i in l.strip():
+            row.append(i)
+        level.append(row)
+level=np.array(level)[:,:56]
+count1=calc_tp_count(level,1)
+
+#get the count for level 3 [:,:56]
+f=open("../Mario-AI-Framework/levels/original/lvl-3.txt")
+lvl=f.readlines()
+level = []
+for l in lvl:
+    row=[]
+    if len(l.strip()) > 0:
+        for i in l.strip():
+            row.append(i)
+        level.append(row)
+level=np.array(level)[:,:56]
+count3=calc_tp_count(level,1)
+
+def calc_kldivergent_level1(ind,result):
+    strlevel=[]
+    number_level=eval(ind.level)
+    for x in number_level:
+        row=[]
+        for y in x:
+            row.append(get_char(y))
+        strlevel.append(row)
+    strlevel=np.array(strlevel)[:,:56]
+    ind_count=calc_tp_count(strlevel,1)
+    return calc_tp_kldiv(ind_count,count1)
+
+def calc_kldivergent_level3(ind,result):
+    strlevel=[]
+    number_level=eval(ind.level)
+    for x in number_level:
+        row=[]
+        for y in x:
+            row.append(get_char(y))
+        strlevel.append(row)
+    strlevel=np.array(strlevel)[:,:56]
+    ind_count=calc_tp_count(strlevel,1)
+    return calc_tp_kldiv(ind_count,count3)
