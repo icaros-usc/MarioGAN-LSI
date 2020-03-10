@@ -9,7 +9,7 @@ from util.SearchHelper import *
 from util.gan_generator import *
 
 num_params = 96
-boundary_value = 5.12
+boundary_value = 1
 batchSize = 3
 nz = 32
 RecordFrequency=20

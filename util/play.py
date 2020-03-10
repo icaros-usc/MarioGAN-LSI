@@ -21,7 +21,7 @@ import os
 
 batchSize = 32
 num_params = 96
-boundary_value = 5.12
+boundary_value = 1
 nz = 32
 
 imageSize = 64
