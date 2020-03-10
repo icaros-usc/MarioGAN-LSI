@@ -113,6 +113,8 @@ def run_trial(num_to_evaluate,algorithm_name,algorithm_config,elite_map_config,t
         mutation_power2=algorithm_config["mutation_power2"]
         initial_population=algorithm_config["initial_population"]
         algorithm_instance=ISOLineDDAlgorithm(mutation_power1, mutation_power2,initial_population, num_to_evaluate, feature_map,trial_name,column_names)
+    elif algorithm_name=="RANDOM":
+        algorithm_instance=RandomGenerator(num_to_evaluate,feature_map,trial_name,column_names)
     
     simulation=1
     while algorithm_instance.is_running():

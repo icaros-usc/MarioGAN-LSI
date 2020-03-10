@@ -21,8 +21,6 @@ def calc_num_enemies(ind,result):
     num_enemies =  len (im[np.isin(im,ENEMY)])
     return num_enemies
 
-def calc_coins_collected(ind,result):
-    return result.getNumCollectedTileCoins()
 
 def calc_tp_count(lvl, p_size, border_value=-1):
     padded_lvl = np.pad(lvl, p_size, constant_values=border_value)
@@ -116,3 +114,59 @@ def calc_kldivergent_level3(ind,result):
     strlevel=np.array(strlevel)[:,:56]
     ind_count=calc_tp_count(strlevel,1)
     return calc_tp_kldiv(ind_count,count3)
+
+def calc_jump(ind,result):
+    num_jumps=result.getNumJumps()
+    if num_jumps>0:
+        return 1
+    else:
+        return 0
+
+def calc_high_jump(ind,result):
+    max_jump_frame=result.getMaxJumpAirTime()
+    if max_jump_frame >20:
+        return 1
+    else:
+        return 0
+
+def calc_long_jump(ind,result):
+    max_X_jump=result.getMaxXJump()
+    if max_X_jump>20:
+        return 1
+    else:
+        return 0
+
+def calc_stomp(ind,result):
+    num_stomp=result.getKillsByStomp()
+    if(num_stomp>0):
+        return 1
+    else:
+        return 0
+
+def calc_shell_kill(ind,result):
+    num_shell_kill=result.getKillsByShell()
+    if num_shell_kill>0:
+        return 1
+    else:
+        return 0
+
+def calc_fall_kill(ind,result):
+    num_fall_kill=result.getKillsByFall()
+    if num_fall_kill>0:
+        return 1
+    else:
+        return 0
+
+def calc_mushroom(ind,result):
+    num_mushroom=result.getNumCollectedMushrooms()
+    if(num_mushroom>0):
+        return 1
+    else:
+        return 0
+
+def calc_coin(ind,result):
+    num_coin=result.getNumCollectedTileCoins()
+    if(num_coin>0):
+        return 1
+    else:
+        return 0

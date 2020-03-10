@@ -400,3 +400,50 @@ class ISOLineDDAlgorithm:
                 wr = csv.writer(logFile, dialect='excel')
                 wr.writerow(rowData)
                 logFile.close() 
+
+class RandomGenerator:
+
+    def __init__(self, num_to_evaluate, feature_map,trial_name,column_names):
+        self.num_to_evaluate = num_to_evaluate
+        self.individuals_evaluated = 0
+        self.feature_map = feature_map
+        self.allRecords=pd.DataFrame(columns=column_names)
+        self.trial_name=trial_name
+
+    def is_running(self):
+        return self.individuals_evaluated < self.num_to_evaluate
+
+    def generate_individual(self,model_path):
+        
+        ind = Individual()
+        unscaled_params = \
+            [np.random.uniform(low=-boundary_value, high=boundary_value) for _ in range(num_params)]
+        ind.param_vector = unscaled_params
+       
+
+        level=gan_generate(ind.param_vector,batchSize,nz,model_path)
+        ind.level=level
+ 
+        return ind
+
+    def return_evaluated_individual(self, ind):
+
+        ind.ID = self.individuals_evaluated
+        self.individuals_evaluated += 1
+        self.feature_map.add(ind)
+        self.allRecords.loc[ind.ID]=["Random"]+[ind.param_vector]+ind.statsList+list(ind.features)
+
+        #print("Evaluated One Individual")
+    
+        if self.individuals_evaluated % RecordFrequency == 0:
+            elites = [self.feature_map.elite_map[x] for x in self.feature_map.elite_map]
+            if(len(elites)!=0):
+                logFile=open("logs/"+self.trial_name+"_elites_freq"+str(RecordFrequency)+".csv","a")
+                rowData=[]
+                for x in elites:
+                    currElite=[x.ID]
+                    currElite+=self.allRecords.loc[x.ID].tolist()
+                    rowData.append(currElite)
+                wr = csv.writer(logFile, dialect='excel')
+                wr.writerow(rowData)
+                logFile.close()
