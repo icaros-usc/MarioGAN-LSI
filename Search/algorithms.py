@@ -304,7 +304,7 @@ class MapElitesAlgorithm:
         ind = Individual()
         if self.individuals_evaluated < self.initial_population:
             unscaled_params = \
-                [np.random.uniform(low=-boundary_value, high=boundary_value) for _ in range(num_params)]
+                [np.random.normal(0,1) for _ in range(num_params)]
             ind.param_vector = unscaled_params
         else:
             parent = self.feature_map.get_random_elite()
@@ -359,7 +359,7 @@ class ISOLineDDAlgorithm:
         ind = Individual()
         if self.individuals_evaluated < self.initial_population:
             unscaled_params = \
-                [np.random.uniform(low=-boundary_value, high=boundary_value) for _ in range(num_params)]
+                [np.random.normal(0,1) for _ in range(num_params)]
             ind.param_vector = unscaled_params
         else:
             pos = random.randint(0, len(self.feature_map.elite_indices)-1)
@@ -417,7 +417,7 @@ class RandomGenerator:
         
         ind = Individual()
         unscaled_params = \
-            [np.random.uniform(low=-boundary_value, high=boundary_value) for _ in range(num_params)]
+            [np.random.normal(0,1) for _ in range(num_params)]
         ind.param_vector = unscaled_params
        
 
