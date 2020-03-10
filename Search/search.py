@@ -21,7 +21,6 @@ import toml
 import json
 import numpy
 import util.models.dcgan as dcgan
-import cma
 import torch
 #import torchvision.utils as vutils
 from torch.autograd import Variable
