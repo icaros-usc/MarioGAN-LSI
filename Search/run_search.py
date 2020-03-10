@@ -15,7 +15,7 @@ visualize=experiment_toml["Visualize"]
 num_list=[]
 workerID=opt.workerID-1
 if workerID < 0:
-    print("workerID should be greater than or equal to 0")
+    print("workerID should be greater than 0")
 else:
     for i in experiment_toml["Trials"]:
         num_list.append(i["num_trials"])

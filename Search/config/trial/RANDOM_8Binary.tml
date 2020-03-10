@@ -1,0 +1,5 @@
+algorithm = "RANDOM"
+trial_name="RANDOM_8Binary"
+num_simulations=10000
+algorithm_config = "Search/config/algorithms/random.tml"
+elite_map_config = "Search/config/elite_map/8Binary.tml"
