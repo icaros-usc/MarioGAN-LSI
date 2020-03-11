@@ -124,14 +124,14 @@ def calc_jump(ind,result):
 
 def calc_high_jump(ind,result):
     max_jump_frame=result.getMaxJumpAirTime()
-    if max_jump_frame >20:
+    if max_jump_frame >12:
         return 1
     else:
         return 0
 
 def calc_long_jump(ind,result):
     max_X_jump=result.getMaxXJump()
-    if max_X_jump>20:
+    if max_X_jump>120:
         return 1
     else:
         return 0

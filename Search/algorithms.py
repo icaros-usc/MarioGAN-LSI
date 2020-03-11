@@ -140,33 +140,31 @@ class CMA_ES_Algorithm:
         # Reset the population
         self.population.clear()
 
+class ImprovementEmitter:
 
-class CMA_ME_Algorithm:
-
-    def __init__(self, mutation_power, num_to_evaluate, population_size,feature_map,trial_name,column_names):     
-        self.allRecords=pd.DataFrame(columns=column_names)
+    def __init__(self, mutation_power, population_size,feature_map):
+        #self.population_size = int(4.0+math.floor(3.0*math.log(num_params))) * 2
         self.population_size=population_size
+        #print('pop size', self.population_size)
         self.sigma = mutation_power
         self.num_released = 0
+        self.feature_map=feature_map
         self.population = []
-        self.feature_map = feature_map
-        self.num_features = len(self.feature_map.feature_ranges)
-        self.num_to_evaluate = num_to_evaluate
-        self.individuals_evaluated = 0
-        self.trial_name=trial_name
-        self.reset()
+        self.parents=[]
+        #print('num_features', self.num_features)
         
+        self.reset()
 
     def reset(self):
         self.mutation_power = self.sigma
         if len(self.feature_map.elite_map) == 0:
             self.mean = np.asarray([0.0] * num_params)
         else:
-            self.mean = self.feature_map.get_random_elite().param_vector  
+            self.mean = self.feature_map.get_random_elite().param_vector
         self.pc = np.zeros((num_params,), dtype=np.float_)
         self.ps = np.zeros((num_params,), dtype=np.float_)
         self.C = DecompMatrix(num_params)
-    
+
     def check_stop(self, parents):
         if self.C.condition_number > 1e14:
             return True
@@ -176,9 +174,6 @@ class CMA_ME_Algorithm:
             return True
 
         return False
-
-    def is_running(self):
-        return self.individuals_evaluated < self.num_to_evaluate
 
     def generate_individual(self,model_path):
         unscaled_params = \
@@ -191,29 +186,22 @@ class CMA_ME_Algorithm:
         level=gan_generate(ind.param_vector,batchSize,nz,model_path)
         ind.level=level
 
+        self.num_released += 1
         return ind
 
     def return_evaluated_individual(self, ind):
-        ind.make_features()
-        ind.ID = self.individuals_evaluated
-        self.individuals_evaluated += 1
-        self.allRecords.loc[ind.ID]=["CMA-ME-Improvement"]+[ind.param_vector]+ind.statsList+list(ind.features)
         self.population.append(ind)
+        if self.feature_map.add(ind):
+            self.parents.append(ind)
         if len(self.population) < self.population_size:
             return
 
         # Only filter by this generation
-        parents = []
-        for cur in self.population:
-            if self.feature_map.add(cur):
-                parents.append(cur)
-        num_parents = len(parents)
+        num_parents = len(self.parents)
         needs_restart = num_parents == 0
-
 
         # Only update if there are parents
         if num_parents > 0:
-            #print("did improve")
             #sys.stdout.flush()
             parents = sorted(parents, key=lambda x: x.delta)[::-1]
 
@@ -265,13 +253,52 @@ class CMA_ME_Algorithm:
             # Update sigma
             cn, sum_square_ps = cs / damps, sum(x**2 for x in self.ps)
             self.mutation_power *= math.exp(min(1, cn * (sum_square_ps / num_params - 1) / 2))
-
         if needs_restart:
             self.reset()
 
         # Reset the population
         self.population.clear()
+        self.parents.clear()
+
+class CMA_ME_Algorithm:
+
+    def __init__(self, mutation_power, num_to_evaluate, population_size,feature_map,trial_name,column_names):     
+        self.allRecords=pd.DataFrame(columns=column_names)
+        self.population_size=population_size
+        self.sigma = mutation_power
+        self.total_num_released = 0
+        self.population = []
+        self.feature_map = feature_map
+        self.num_features = len(self.feature_map.feature_ranges)
+        self.num_to_evaluate = num_to_evaluate
+        self.individuals_evaluated = 0
+        self.trial_name=trial_name
         
+        emitters=[]
+        for i in range(0,15):
+            emitters.append(ImprovementEmitter(mutation_power,population_size,self.feature_map))
+        self.emitters=emitters
+        self.pos=0
+
+    def is_running(self):
+        return self.individuals_evaluated < self.num_to_evaluate
+
+    def generate_individual(self,model_path):
+        self.pos=self.total_num_released%15
+        currEmitter=self.emitters[self.pos]
+        ind=currEmitter.generate_individual(model_path)
+        self.total_num_released=self.total_num_released+1
+        return ind
+
+    def return_evaluated_individual(self, ind):
+        ind.ID = self.individuals_evaluated
+        self.individuals_evaluated += 1
+        self.allRecords.loc[ind.ID]=["CMA-ME-Improvement"]+[ind.param_vector]+ind.statsList+list(ind.features)
+        currEmitter=self.emitters[self.pos]
+
+        #this includes adding it into the elite map and checking if needs to reset emitter
+        currEmitter.return_evaluated_individual(ind)
+
         if self.individuals_evaluated % RecordFrequency == 0:
             elites = [self.feature_map.elite_map[x] for x in self.feature_map.elite_map]
             if(len(elites)!=0):
