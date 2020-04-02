@@ -1,9 +1,9 @@
 [[Map.Features]]
 name="calc_kldivergent_level1"
 low=0
-high=1
+high=5
 
 [[Map.Features]]
 name="calc_kldivergent_level3"
 low=0
-high=1
+high=5

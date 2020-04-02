@@ -90,35 +90,37 @@ evaluate = eval_mario
 def run_trial(num_to_evaluate,algorithm_name,algorithm_config,elite_map_config,trial_name,model_path,visualize):
     feature_ranges=[]
     column_names=['emitterName','latentVector', 'completionPercentage','jumpActionsPerformed','killsTotal','livesLeft','coinsCollected','remainingTime (20-timeSpent)']
+    bc_names=[]
     for bc in elite_map_config["Map"]["Features"]:
         feature_ranges.append((bc["low"],bc["high"]))
         column_names.append(bc["name"])
+        bc_names.append(bc["name"])
     feature_map = FeatureMap(num_to_evaluate, feature_ranges)
 
     if algorithm_name=="CMAES":
         print("Start Running CMAES")
         mutation_power=algorithm_config["mutation_power"]
         population_size=algorithm_config["population_size"]
-        algorithm_instance=CMA_ES_Algorithm(num_to_evaluate,mutation_power,population_size,feature_map,trial_name,column_names)
+        algorithm_instance=CMA_ES_Algorithm(num_to_evaluate,mutation_power,population_size,feature_map,trial_name,column_names,bc_names)
     elif algorithm_name=="CMAME":
         print("Start Running CMAME")
         mutation_power=algorithm_config["mutation_power"]
         population_size=algorithm_config["population_size"]
-        algorithm_instance=CMA_ME_Algorithm(mutation_power,num_to_evaluate,population_size,feature_map,trial_name,column_names)
+        algorithm_instance=CMA_ME_Algorithm(mutation_power,num_to_evaluate,population_size,feature_map,trial_name,column_names,bc_names)
     elif algorithm_name=="MAPELITES":
         print("Start Running MAPELITES")
         mutation_power=algorithm_config["mutation_power"]
         initial_population=algorithm_config["initial_population"]
-        algorithm_instance=MapElitesAlgorithm(mutation_power, initial_population, num_to_evaluate, feature_map,trial_name,column_names)
+        algorithm_instance=MapElitesAlgorithm(mutation_power, initial_population, num_to_evaluate, feature_map,trial_name,column_names,bc_names)
     elif algorithm_name=="ISOLINEDD":
         print("Start Running ISOLINEDD")
         mutation_power1=algorithm_config["mutation_power1"]
         mutation_power2=algorithm_config["mutation_power2"]
         initial_population=algorithm_config["initial_population"]
-        algorithm_instance=ISOLineDDAlgorithm(mutation_power1, mutation_power2,initial_population, num_to_evaluate, feature_map,trial_name,column_names)
+        algorithm_instance=ISOLineDDAlgorithm(mutation_power1, mutation_power2,initial_population, num_to_evaluate, feature_map,trial_name,column_names,bc_names)
     elif algorithm_name=="RANDOM":
         print("Start Running RANDOM")
-        algorithm_instance=RandomGenerator(num_to_evaluate,feature_map,trial_name,column_names)
+        algorithm_instance=RandomGenerator(num_to_evaluate,feature_map,trial_name,column_names,bc_names)
     
     simulation=1
     while algorithm_instance.is_running():
