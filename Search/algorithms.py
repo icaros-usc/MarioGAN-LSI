@@ -205,7 +205,7 @@ class ImprovementEmitter:
         # Only update if there are parents
         if num_parents > 0:
             #sys.stdout.flush()
-            parents = sorted(parents, key=lambda x: x.delta)[::-1]
+            parents = sorted(self.parents, key=lambda x: x.delta)[::-1]
 
             # Create fresh weights for the number of elites found
             weights = [math.log(num_parents + 0.5) \
@@ -278,7 +278,7 @@ class CMA_ME_Algorithm:
         self.bc_names=bc_names
         
         emitters=[]
-        for i in range(0,15):
+        for i in range(0,3):
             emitters.append(ImprovementEmitter(mutation_power,population_size,self.feature_map))
         self.emitters=emitters
         self.pos=0
@@ -287,7 +287,7 @@ class CMA_ME_Algorithm:
         return self.individuals_evaluated < self.num_to_evaluate
 
     def generate_individual(self,model_path):
-        self.pos=self.total_num_released%15
+        self.pos=self.total_num_released%3
         currEmitter=self.emitters[self.pos]
         ind=currEmitter.generate_individual(model_path)
         self.total_num_released=self.total_num_released+1

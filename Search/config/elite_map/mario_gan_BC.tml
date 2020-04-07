@@ -1,10 +1,10 @@
 [[Map.Features]]
 name="calc_higher_level_non_empty_blocks"
 low=0
-high=39
+high=150
 
 [[Map.Features]]
 name="calc_num_enemies"
 low=0
-high=19
+high=50
 
