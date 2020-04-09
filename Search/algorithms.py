@@ -404,8 +404,14 @@ class ISOLineDDAlgorithm:
             parent1=self.feature_map.elite_map[index1]
             parent2=self.feature_map.elite_map[index2]
 
-            unscaled_params = \
-                [parent1.param_vector[i] + self.mutation_power1 * gaussian() + self.mutation_power2 * (parent1.param_vector[i]-parent2.param_vector[i]) * gaussian() for i in range(num_params)]
+            #unscaled_params = \
+            #    [parent1.param_vector[i] + self.mutation_power1 * gaussian() + self.mutation_power2 * (parent1.param_vector[i]-parent2.param_vector[i]) * gaussian() for i in range(num_params)]
+            gaussian_sample=gaussian()
+            vector=[]
+            for i in range(len(parent1.param_vector)):
+                vector.append(parent1.param_vector[i]+self.mutation_power1*gaussian_sample+(parent1.param_vector[i]-parent2.param_vector[i])*self.mutation_power2*gaussian_sample)
+            unscaled_params=vector
+            
             ind.param_vector = unscaled_params
         level=gan_generate(ind.param_vector,batchSize,nz,model_path)
         ind.level=level
