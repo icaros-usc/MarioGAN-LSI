@@ -134,6 +134,7 @@ class FeatureMap:
 
    def remap(self, next_num_groups):
       self.num_groups = next_num_groups
+      print(self.num_groups)
 
       all_elites = []
       for index in self.elite_map:

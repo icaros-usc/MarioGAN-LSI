@@ -5,7 +5,7 @@ from matplotlib import cm
 from scipy.ndimage.filters import gaussian_filter
 
 
-file_name="CMAME_MarioGANBC_sim1_elites_freq20.csv"
+file_name="ISOLINEDD_MarioGANBC_sim11_elites_freq20.csv"
 file_name_list=file_name.split("_")
 with open("logs/"+file_name, newline='') as csvfile:
         all_records = csv.reader(csvfile, delimiter=',')
