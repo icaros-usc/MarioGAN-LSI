@@ -441,13 +441,8 @@ class ISOLineDDAlgorithm:
                 [np.random.normal(0,1) for _ in range(num_params)]
             ind.param_vector = unscaled_params
         else:
-            pos = random.randint(0, len(self.feature_map.elite_indices)-1)
-            index1 = self.feature_map.elite_indices[pos]
-            pos = random.randint(0, len(self.feature_map.elite_indices)-1)
-            index2 = self.feature_map.elite_indices[pos]
-            
-            parent1=self.feature_map.elite_map[index1]
-            parent2=self.feature_map.elite_map[index2]
+            parent1=self.feature_map.get_random_elite()
+            parent2=self.feature_map.get_random_elite()
 
             #unscaled_params = \
             #    [parent1.param_vector[i] + self.mutation_power1 * gaussian() + self.mutation_power2 * (parent1.param_vector[i]-parent2.param_vector[i]) * gaussian() for i in range(num_params)]
