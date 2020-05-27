@@ -26,4 +26,4 @@ module list
 # Load conda
 source activate MarioGAN-LSI
 # Run the search
-python3 Search/run_search.py -w $SGE_TASK_ID -c Search/config/experiment/experiment.tml
+python3 search/run_search.py -w $SGE_TASK_ID -c Search/config/experiment/experiment.tml

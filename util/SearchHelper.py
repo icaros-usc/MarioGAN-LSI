@@ -41,14 +41,6 @@ class Individual:
     def __init__(self):
         pass
 
-    def reduce(self, v):
-        if abs(v) > boundary_value:
-            return boundary_value / v
-        return v
-
-    def make_features(self):
-        pass
-        
     def read_mario_features(self):
         pass
 
@@ -79,38 +71,26 @@ class DecompMatrix:
 
 class FeatureMap:
 
-   def __init__(self, max_individuals, feature_ranges, resolutions=(60,60)):
+   def __init__(self, max_individuals, feature_ranges, resolutions):
       self.max_individuals = max_individuals
       self.feature_ranges = feature_ranges
       self.resolutions = resolutions
 
       self.elite_map = {}
       self.elite_indices = []
-      self.num_groups = -1
 
       self.num_individuals_added = 0
 
-   def clone_blank(self):
-      copy_map = FeatureMap(self.max_individuals, self.feature_ranges, self.resolutions)
-      copy_map.num_individuals_added = self.num_individuals_added
-      copy_map.num_groups = self.num_groups
-      return copy_map
-
-   def get_size(self, portion_done):
-      rval = self.resolutions[1] - self.resolutions[0]
-      size = int(((portion_done+1e-9) * rval) + self.resolutions[0])
-      return min(size, self.resolutions[1])
-
    def get_feature_index(self, feature_id, feature):
       feature_range = self.feature_ranges[feature_id]
-      if feature <= feature_range[0]:
+      if feature-1e-9 <= feature_range[0]:
          return 0
-      if feature >= feature_range[1]:
-         return self.num_groups-1
+      if feature_range[1] <= feature + 1e-9:
+         return self.resolutions[feature_id]-1
 
-      gap = feature_range[1] - feature_range[0] + 1
+      gap = feature_range[1] - feature_range[0]
       pos = feature - feature_range[0]
-      index = int(self.num_groups * pos / gap)
+      index = int((self.resolutions[feature_id] * pos + 1e-9) / gap)
       return index
 
    def get_index(self, cur):
@@ -132,26 +112,8 @@ class FeatureMap:
 
       return replaced_elite
 
-   def remap(self, next_num_groups):
-      self.num_groups = next_num_groups
-      print(self.num_groups)
-
-      all_elites = []
-      for index in self.elite_map:
-         all_elites.append(self.elite_map[index])
-
-      self.elite_indices = []
-      self.elite_map = {}
-      for cur in all_elites:
-         self.add_to_map(cur)
-
    def add(self, to_add):
       self.num_individuals_added += 1
-      portion_done = 1.0 * self.num_individuals_added / self.max_individuals
-      next_size = self.get_size(portion_done)
-      if next_size != self.num_groups:
-         self.remap(next_size)
-
       replaced_elite = self.add_to_map(to_add)
       return replaced_elite
 
@@ -159,3 +121,4 @@ class FeatureMap:
       pos = random.randint(0, len(self.elite_indices)-1)
       index = self.elite_indices[pos]
       return self.elite_map[index]
+
