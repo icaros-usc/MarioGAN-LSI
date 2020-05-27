@@ -437,22 +437,20 @@ class ISOLineDDAlgorithm:
         
         ind = Individual()
         if self.individuals_evaluated < self.initial_population:
-            unscaled_params = \
-                [np.random.normal(0,1) for _ in range(num_params)]
+            unscaled_params = np.random.normal(0.0, 1.0, unscaled_params)
             ind.param_vector = unscaled_params
         else:
             parent1=self.feature_map.get_random_elite()
             parent2=self.feature_map.get_random_elite()
 
-            #unscaled_params = \
-            #    [parent1.param_vector[i] + self.mutation_power1 * gaussian() + self.mutation_power2 * (parent1.param_vector[i]-parent2.param_vector[i]) * gaussian() for i in range(num_params)]
-            gaussian_sample=gaussian()
-            vector=[]
-            for i in range(len(parent1.param_vector)):
-                vector.append(parent1.param_vector[i]+self.mutation_power1*gaussian_sample+(parent1.param_vector[i]-parent2.param_vector[i])*self.mutation_power2*gaussian_sample)
-            unscaled_params=vector
+            p1 = parent1.unscaled_params
+            p2 = parent2.unscaled_params
+            random_vector = np.random.normal(0.0, self.mutation_power1, unscaled_params)
+            line_vector = (p2 - p1) * np.random.normal(0.0, self.mutation_power2)
+            unscaled_params = random_vector + line_vector + p1
             
             ind.param_vector = unscaled_params
+
         level=gan_generate(ind.param_vector,batchSize,nz,model_path)
         ind.level=level
         return ind
