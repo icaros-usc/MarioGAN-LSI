@@ -307,7 +307,7 @@ class ImprovementEmitter:
         if needs_restart:
             self.reset()
 
-        self.individuals_disbatched = 0
+        #self.individuals_disbatched = 0
         # Reset the population
         self.population.clear()
         self.parents.clear()
