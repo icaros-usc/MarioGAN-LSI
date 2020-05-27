@@ -1,5 +1,5 @@
 algorithm = "CMAME"
 trial_name="CMAME_KLBC"
 num_simulations=10000
-algorithm_config = "Search/config/algorithms/cma_me.tml"
-elite_map_config = "Search/config/elite_map/KL_BC.tml"
+algorithm_config = "search/config/algorithms/cma_me.tml"
+elite_map_config = "search/config/elite_map/KL_BC.tml"
