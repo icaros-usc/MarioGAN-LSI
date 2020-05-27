@@ -10,7 +10,7 @@ from util.gan_generator import *
 
 num_params = 96
 boundary_value = 1
-batch_size = 3
+batchSize = 3
 nz = 32
 record_frequency=20
 
@@ -234,7 +234,7 @@ class ImprovementEmitter:
         level=gan_generate(ind.param_vector,batchSize,nz,model_path)
         ind.level=level
 
-        self.num_released += 1
+        #self.num_released += 1
         return ind
 
     def return_evaluated_individual(self, ind):
@@ -324,7 +324,7 @@ class CMA_ME_Algorithm:
         self.trial_name=trial_name
         self.bc_names=bc_names
         
-        emitters = [ImprovementEmitter(mutation_power,population_size,self.feature_map)]
+        self.emitters = [ImprovementEmitter(mutation_power,population_size,self.feature_map)]
 
     def is_running(self):
         return self.individuals_evaluated < self.num_to_evaluate

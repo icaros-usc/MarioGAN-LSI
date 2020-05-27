@@ -51,7 +51,7 @@ if not os.path.exists("logs"):
 global EliteMapConfig
 EliteMapConfig=[]
 
-
+import sys
 
 
 def eval_mario(ind,visualize):
@@ -95,10 +95,15 @@ def run_trial(num_to_evaluate,algorithm_name,algorithm_config,elite_map_config,t
         feature_ranges.append((bc["low"],bc["high"]))
         column_names.append(bc["name"])
         bc_names.append(bc["name"])
+
     if(trial_name.split('_')[1]=="8Binary"):
-        feature_map = FeatureMap(num_to_evaluate, feature_ranges,resolutions=(2,2))
+        feature_map = FeatureMap(num_to_evaluate, feature_ranges,resolutions=(2,)*8)
+    elif(trial_name.split('_')[1]=="MarioGANBC"):
+        feature_map = FeatureMap(num_to_evaluate, feature_ranges, resolutions=(151,26))
+    elif(trial_name.split('_')[1]=="KLBC"):
+        feature_map = FeatureMap(num_to_evaluate, feature_ranges, resolutions=(60,60))
     else:
-        feature_map = FeatureMap(num_to_evaluate, feature_ranges)
+        sys.exit('unknown BC name. Exiting the program.')
 
     if algorithm_name=="CMAES":
         print("Start Running CMAES")
