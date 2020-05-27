@@ -235,12 +235,13 @@ class ImprovementEmitter:
         ind.level=level
 
         self.individuals_disbatched += 1
-        #self.num_released += 1
+
         return ind
 
     def return_evaluated_individual(self, ind):
         self.individuals_evaluated += 1
         self.population.append(ind)
+        self.individuals_evaluated += 1
         if self.feature_map.add(ind):
             self.parents.append(ind)
         if len(self.population) < self.population_size:
@@ -404,8 +405,6 @@ class MapElitesAlgorithm:
         self.feature_map.add(ind)
         self.allRecords.loc[ind.ID]=["MAP-Elite"]+[ind.param_vector]+ind.statsList+list(ind.features)
 
-        #print("Evaluated One Individual")
-    
         if self.individuals_evaluated % record_frequency == 0:
             elites = [self.feature_map.elite_map[x] for x in self.feature_map.elite_map]
             if(len(elites)!=0):
