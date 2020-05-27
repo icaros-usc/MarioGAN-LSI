@@ -98,7 +98,7 @@ class CMA_ES_Algorithm:
         unscaled_params = self.mean + np.array(unscaled_params)
         ind = Individual()
         ind.param_vector = unscaled_params
-        level=gan_generate(ind.param_vector,batch_size,nz,model_path)
+        level=gan_generate(ind.param_vector,batchSize,nz,model_path)
         ind.level=level
         return ind
     
