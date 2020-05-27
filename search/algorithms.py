@@ -10,7 +10,7 @@ from util.gan_generator import *
 
 num_params = 96
 boundary_value = 1
-batchSize = 3
+batch_size = 3
 nz = 32
 record_frequency=20
 
@@ -22,7 +22,7 @@ class CMA_ES_Algorithm:
         self.num_parents = self.population_size // 2
 
         self.feature_map=feature_map
-        self.allRecords=pd.DataFrame(columns=column_names)
+        self.all_records=pd.DataFrame(columns=column_names)
 
         self.sigma = mutation_power
         self.mutation_power = mutation_power
@@ -98,7 +98,7 @@ class CMA_ES_Algorithm:
         unscaled_params = self.mean + np.array(unscaled_params)
         ind = Individual()
         ind.param_vector = unscaled_params
-        level=gan_generate(ind.param_vector,batchSize,nz,model_path)
+        level=gan_generate(ind.param_vector,batch_size,nz,model_path)
         ind.level=level
         return ind
     
@@ -106,7 +106,7 @@ class CMA_ES_Algorithm:
         ind.ID = self.individuals_evaluated
         self.individuals_evaluated += 1
         self.individuals_evaluated_total += 1
-        self.allRecords.loc[ind.ID]=["CMA-ES"]+[ind.param_vector]+ind.statsList+list(ind.features)
+        self.all_records.loc[ind.ID]=["CMA-ES"]+[ind.param_vector]+ind.statsList+list(ind.features)
 
         if self.individuals_evaluated % record_frequency == 0:
 
@@ -116,8 +116,8 @@ class CMA_ES_Algorithm:
                 rowData=[]
                 for x in elites:
                     currElite=[x.ID]
-                    currElite+=self.allRecords.loc[x.ID][['completionPercentage']].tolist()
-                    currElite+=self.allRecords.loc[x.ID][self.bc_names].tolist()
+                    currElite+=self.all_records.loc[x.ID][['completionPercentage']].tolist()
+                    currElite+=self.all_records.loc[x.ID][self.bc_names].tolist()
                     rowData.append(currElite)
                 wr = csv.writer(logFile, dialect='excel')
                 wr.writerow(rowData)
@@ -231,7 +231,7 @@ class ImprovementEmitter:
         unscaled_params = self.mean + np.array(unscaled_params)
         ind = Individual()
         ind.param_vector = unscaled_params
-        level=gan_generate(ind.param_vector,batchSize,nz,model_path)
+        level=gan_generate(ind.param_vector,batch_size,nz,model_path)
         ind.level=level
 
         self.individuals_disbatched += 1
@@ -315,7 +315,7 @@ class ImprovementEmitter:
 class CMA_ME_Algorithm:
 
     def __init__(self, mutation_power, num_to_evaluate, population_size, feature_map, trial_name, column_names, bc_names):     
-        self.allRecords = pd.DataFrame(columns=column_names)
+        self.all_records = pd.DataFrame(columns=column_names)
         self.population_size = population_size
         self.sigma = mutation_power
         self.total_num_released = 0
@@ -347,7 +347,7 @@ class CMA_ME_Algorithm:
     def return_evaluated_individual(self, ind):
         ind.ID = self.individuals_evaluated
         self.individuals_evaluated += 1
-        self.allRecords.loc[ind.ID] = ["CMA-ME"]+[ind.param_vector]+ind.statsList+list(ind.features)
+        self.all_records.loc[ind.ID] = ["CMA-ME"]+[ind.param_vector]+ind.statsList+list(ind.features)
         self.emitters[ind.emitter_id].return_evaluated_individual(ind)
 
         if self.individuals_evaluated % record_frequency == 0:
@@ -357,8 +357,8 @@ class CMA_ME_Algorithm:
                 rowData=[]
                 for x in elites:
                     currElite=[x.ID]
-                    currElite+=self.allRecords.loc[x.ID][['completionPercentage']].tolist()
-                    currElite+=self.allRecords.loc[x.ID][self.bc_names].tolist()
+                    currElite+=self.all_records.loc[x.ID][['completionPercentage']].tolist()
+                    currElite+=self.all_records.loc[x.ID][self.bc_names].tolist()
                     rowData.append(currElite)
                 wr = csv.writer(logFile, dialect='excel')
                 wr.writerow(rowData)
@@ -372,7 +372,7 @@ class MapElitesAlgorithm:
         self.individuals_evaluated = 0
         self.feature_map = feature_map
         self.mutation_power = mutation_power
-        self.allRecords=pd.DataFrame(columns=column_names)
+        self.all_records=pd.DataFrame(columns=column_names)
         self.trial_name=trial_name
         self.bc_names=bc_names
 
@@ -392,7 +392,7 @@ class MapElitesAlgorithm:
                 [parent.param_vector[i] + self.mutation_power * gaussian() for i in range(num_params)]
             ind.param_vector = unscaled_params
 
-        level=gan_generate(ind.param_vector,batchSize,nz,model_path)
+        level=gan_generate(ind.param_vector,batch_size,nz,model_path)
         ind.level=level
  
         return ind
@@ -402,7 +402,7 @@ class MapElitesAlgorithm:
         ind.ID = self.individuals_evaluated
         self.individuals_evaluated += 1
         self.feature_map.add(ind)
-        self.allRecords.loc[ind.ID]=["MAP-Elite"]+[ind.param_vector]+ind.statsList+list(ind.features)
+        self.all_records.loc[ind.ID]=["MAP-Elite"]+[ind.param_vector]+ind.statsList+list(ind.features)
 
         if self.individuals_evaluated % record_frequency == 0:
             elites = [self.feature_map.elite_map[x] for x in self.feature_map.elite_map]
@@ -411,8 +411,8 @@ class MapElitesAlgorithm:
                 rowData=[]
                 for x in elites:
                     currElite=[x.ID]
-                    currElite+=self.allRecords.loc[x.ID][['completionPercentage']].tolist()
-                    currElite+=self.allRecords.loc[x.ID][self.bc_names].tolist()
+                    currElite+=self.all_records.loc[x.ID][['completionPercentage']].tolist()
+                    currElite+=self.all_records.loc[x.ID][self.bc_names].tolist()
                     rowData.append(currElite)
                 wr = csv.writer(logFile, dialect='excel')
                 wr.writerow(rowData)
@@ -427,7 +427,7 @@ class ISOLineDDAlgorithm:
         self.feature_map = feature_map
         self.mutation_power1 = mutation_power1
         self.mutation_power2 = mutation_power2
-        self.allRecords = pd.DataFrame(columns=column_names)
+        self.all_records = pd.DataFrame(columns=column_names)
         self.trial_name = trial_name
         self.bc_names = bc_names
 
@@ -452,7 +452,7 @@ class ISOLineDDAlgorithm:
             
             ind.param_vector = unscaled_params
 
-        level=gan_generate(ind.param_vector,batchSize,nz,model_path)
+        level=gan_generate(ind.param_vector,batch_size,nz,model_path)
         ind.level=level
         return ind
 
@@ -463,7 +463,7 @@ class ISOLineDDAlgorithm:
         self.individuals_evaluated += 1
         
         self.feature_map.add(ind)
-        self.allRecords.loc[ind.ID]=["ISOLine-DD"]+[ind.param_vector]+ind.statsList+list(ind.features)
+        self.all_records.loc[ind.ID]=["ISOLine-DD"]+[ind.param_vector]+ind.statsList+list(ind.features)
 
         if self.individuals_evaluated % record_frequency == 0:
             elites = [self.feature_map.elite_map[x] for x in self.feature_map.elite_map]
@@ -472,8 +472,8 @@ class ISOLineDDAlgorithm:
                 rowData=[]
                 for x in elites:
                     currElite=[x.ID]
-                    currElite+=self.allRecords.loc[x.ID][['completionPercentage']].tolist()
-                    currElite+=self.allRecords.loc[x.ID][self.bc_names].tolist()
+                    currElite+=self.all_records.loc[x.ID][['completionPercentage']].tolist()
+                    currElite+=self.all_records.loc[x.ID][self.bc_names].tolist()
                     rowData.append(currElite)
                 wr = csv.writer(logFile, dialect='excel')
                 wr.writerow(rowData)
@@ -485,7 +485,7 @@ class RandomGenerator:
         self.num_to_evaluate = num_to_evaluate
         self.individuals_evaluated = 0
         self.feature_map = feature_map
-        self.allRecords=pd.DataFrame(columns=column_names)
+        self.all_records=pd.DataFrame(columns=column_names)
         self.trial_name=trial_name
         self.bc_names=bc_names
 
@@ -498,7 +498,7 @@ class RandomGenerator:
         unscaled_params = np.random.normal(0.0, 1.0, num_params)
         ind.param_vector = unscaled_params
 
-        level=gan_generate(ind.param_vector,batchSize,nz,model_path)
+        level=gan_generate(ind.param_vector,batch_size,nz,model_path)
         ind.level=level
  
         return ind
@@ -508,7 +508,7 @@ class RandomGenerator:
         ind.ID = self.individuals_evaluated
         self.individuals_evaluated += 1
         self.feature_map.add(ind)
-        self.allRecords.loc[ind.ID]=["Random"]+[ind.param_vector]+ind.statsList+list(ind.features)
+        self.all_records.loc[ind.ID]=["Random"]+[ind.param_vector]+ind.statsList+list(ind.features)
 
         if self.individuals_evaluated % record_frequency == 0:
             elites = [self.feature_map.elite_map[x] for x in self.feature_map.elite_map]
@@ -517,8 +517,8 @@ class RandomGenerator:
                 rowData=[]
                 for x in elites:
                     currElite=[x.ID]
-                    currElite+=self.allRecords.loc[x.ID][['completionPercentage']].tolist()
-                    currElite+=self.allRecords.loc[x.ID][self.bc_names].tolist()
+                    currElite+=self.all_records.loc[x.ID][['completionPercentage']].tolist()
+                    currElite+=self.all_records.loc[x.ID][self.bc_names].tolist()
                     rowData.append(currElite)
                 wr = csv.writer(logFile, dialect='excel')
                 wr.writerow(rowData)
