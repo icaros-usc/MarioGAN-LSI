@@ -276,7 +276,8 @@ class ImprovementEmitter:
             z = np.matmul(self.C.invsqrt, y)
             self.ps = (1-cs) * self.ps +\
                 (math.sqrt(cs * (2 - cs) * mueff) / self.mutation_power) * z
-            left = sum(x**2 for x in self.ps) / num_params
+            left = sum(x**2 for x in self.ps) / num_params \
+                / (1-(1-self.cs)**(2*self.individuals_evaluated / self.population_size)) 
             right = 2 + 4./(num_params+1)
             hsig = 1 if left < right else 0
 
