@@ -458,7 +458,7 @@ class ISOLineDDAlgorithm:
 
     def return_evaluated_individual(self, ind):
 
-        ind.make_features() #now this does nothing
+        #ind.make_features() #now this does nothing
         ind.ID = self.individuals_evaluated
         self.individuals_evaluated += 1
         
