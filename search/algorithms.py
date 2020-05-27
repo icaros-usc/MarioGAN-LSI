@@ -234,7 +234,7 @@ class ImprovementEmitter:
         level=gan_generate(ind.param_vector,batchSize,nz,model_path)
         ind.level=level
 
-        #self.num_released += 1
+        self.individuals_disbatched += 1
         return ind
 
     def return_evaluated_individual(self, ind):
@@ -401,8 +401,6 @@ class MapElitesAlgorithm:
         self.feature_map.add(ind)
         self.allRecords.loc[ind.ID]=["MAP-Elite"]+[ind.param_vector]+ind.statsList+list(ind.features)
 
-        #print("Evaluated One Individual")
-    
         if self.individuals_evaluated % record_frequency == 0:
             elites = [self.feature_map.elite_map[x] for x in self.feature_map.elite_map]
             if(len(elites)!=0):
