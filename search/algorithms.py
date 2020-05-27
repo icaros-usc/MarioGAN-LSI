@@ -239,7 +239,6 @@ class ImprovementEmitter:
         return ind
 
     def return_evaluated_individual(self, ind):
-        self.individuals_evaluated += 1
         self.population.append(ind)
         self.individuals_evaluated += 1
         if self.feature_map.add(ind):
