@@ -446,7 +446,7 @@ class ISOLineDDAlgorithm:
 
             p1 = parent1.unscaled_params
             p2 = parent2.unscaled_params
-            random_vector = np.random.normal(0.0, self.mutation_power1, unscaled_params)
+            random_vector = np.random.normal(0.0, self.mutation_power1, num_params)
             line_vector = (p2 - p1) * np.random.normal(0.0, self.mutation_power2)
             unscaled_params = random_vector + line_vector + p1
             
