@@ -1,5 +1,5 @@
 algorithm = "ISOLINEDD"
 trial_name="ISOLINEDD_MarioGANBC"
 num_simulations=10000
-algorithm_config = "Search/config/algorithms/iso_linedd.tml"
-elite_map_config = "Search/config/elite_map/mario_gan_BC.tml"
+algorithm_config = "search/config/algorithms/iso_linedd.tml"
+elite_map_config = "search/config/elite_map/mario_gan_BC.tml"
