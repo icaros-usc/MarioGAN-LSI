@@ -438,7 +438,7 @@ class ISOLineDDAlgorithm:
         
         ind = Individual()
         if self.individuals_evaluated < self.initial_population:
-            unscaled_params = np.random.normal(0.0, 1.0, unscaled_params)
+            unscaled_params = np.random.normal(0.0, 1.0, num_params)
             ind.param_vector = unscaled_params
         else:
             parent1=self.feature_map.get_random_elite()
