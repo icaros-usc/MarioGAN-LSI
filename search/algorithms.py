@@ -234,10 +234,12 @@ class ImprovementEmitter:
         level=gan_generate(ind.param_vector,batchSize,nz,model_path)
         ind.level=level
 
+        self.individuals_disbatched += 1
         #self.num_released += 1
         return ind
 
     def return_evaluated_individual(self, ind):
+        self.individuals_evaluated += 1
         self.population.append(ind)
         if self.feature_map.add(ind):
             self.parents.append(ind)
@@ -305,6 +307,7 @@ class ImprovementEmitter:
         if needs_restart:
             self.reset()
 
+        self.individuals_disbatched = 0
         # Reset the population
         self.population.clear()
         self.parents.clear()
