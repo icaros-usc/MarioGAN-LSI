@@ -137,7 +137,7 @@ def run_trial(num_to_evaluate,algorithm_name,algorithm_config,elite_map_config,t
         algorithm_instance.return_evaluated_individual(ind)
         print(str(simulation)+"/"+str(num_to_evaluate)+" simulations finished")
         simulation=simulation+1
-    algorithm_instance.allRecords.to_csv("logs/"+trial_name+"_all_simulations.csv")
+    algorithm_instance.all_records.to_csv("logs/"+trial_name+"_all_simulations.csv")
 
 """
 if __name__ == '__main__':

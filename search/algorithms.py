@@ -88,7 +88,7 @@ class CMA_ES_Algorithm:
         return False
 
     def is_running(self):
-        return self.individuals_evaluated < self.num_to_evaluate
+        return self.individuals_evaluated_total < self.num_to_evaluate
 
     def generate_individual(self,model_path):
         unscaled_params = \
@@ -108,7 +108,7 @@ class CMA_ES_Algorithm:
         self.individuals_evaluated_total += 1
         self.all_records.loc[ind.ID]=["CMA-ES"]+[ind.param_vector]+ind.statsList+list(ind.features)
 
-        if self.individuals_evaluated % record_frequency == 0:
+        if self.individuals_evaluated_total % record_frequency == 0:
 
             elites = [self.feature_map.elite_map[x] for x in self.feature_map.elite_map]
             if(len(elites)!=0):

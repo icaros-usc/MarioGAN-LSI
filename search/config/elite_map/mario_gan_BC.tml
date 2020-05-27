@@ -6,5 +6,5 @@ high=150
 [[Map.Features]]
 name="calc_num_enemies"
 low=0
-high=50
+high=25
 
