@@ -444,13 +444,12 @@ class ISOLineDDAlgorithm:
             parent1=self.feature_map.get_random_elite()
             parent2=self.feature_map.get_random_elite()
 
-            p1 = parent1.unscaled_params
-            p2 = parent2.unscaled_params
+            p1 = parent1.param_vector
+            p2 = parent2.param_vector
             random_vector = np.random.normal(0.0, self.mutation_power1, num_params)
             line_vector = (p2 - p1) * np.random.normal(0.0, self.mutation_power2)
-            unscaled_params = random_vector + line_vector + p1
             
-            ind.param_vector = unscaled_params
+            ind.param_vector = random_vector + line_vector + p1
 
         level=gan_generate(ind.param_vector,batch_size,nz,model_path)
         ind.level=level
