@@ -58,6 +58,10 @@ class CMA_ES_Algorithm:
         # Setup the covariance matrix
         self.C = DecompMatrix(num_params)
 
+        #remove old log files
+        if os.path.isfile("logs/"+self.trial_name+"_elites_freq"+str(record_frequency)+".csv"):
+            os.remove("logs/"+self.trial_name+"_elites_freq"+str(record_frequency)+".csv")
+
     def reset(self):
         self.mutation_power = self.sigma
         if self.best:
@@ -329,6 +333,9 @@ class CMA_ME_Algorithm:
         
         self.emitters = [ImprovementEmitter(mutation_power,population_size,self.feature_map)]
 
+        if os.path.isfile("logs/"+self.trial_name+"_elites_freq"+str(record_frequency)+".csv"):
+            os.remove("logs/"+self.trial_name+"_elites_freq"+str(record_frequency)+".csv")
+
     def is_running(self):
         return self.individuals_evaluated < self.num_to_evaluate
 
@@ -375,6 +382,9 @@ class MapElitesAlgorithm:
         self.all_records=pd.DataFrame(columns=column_names)
         self.trial_name=trial_name
         self.bc_names=bc_names
+
+        if os.path.isfile("logs/"+self.trial_name+"_elites_freq"+str(record_frequency)+".csv"):
+            os.remove("logs/"+self.trial_name+"_elites_freq"+str(record_frequency)+".csv")
 
     def is_running(self):
         return self.individuals_evaluated < self.num_to_evaluate
@@ -430,6 +440,9 @@ class ISOLineDDAlgorithm:
         self.all_records = pd.DataFrame(columns=column_names)
         self.trial_name = trial_name
         self.bc_names = bc_names
+
+        if os.path.isfile("logs/"+self.trial_name+"_elites_freq"+str(record_frequency)+".csv"):
+            os.remove("logs/"+self.trial_name+"_elites_freq"+str(record_frequency)+".csv")
 
     def is_running(self):
         return self.individuals_evaluated < self.num_to_evaluate
@@ -487,6 +500,9 @@ class RandomGenerator:
         self.all_records=pd.DataFrame(columns=column_names)
         self.trial_name=trial_name
         self.bc_names=bc_names
+
+        if os.path.isfile("logs/"+self.trial_name+"_elites_freq"+str(record_frequency)+".csv"):
+            os.remove("logs/"+self.trial_name+"_elites_freq"+str(record_frequency)+".csv")
 
     def is_running(self):
         return self.individuals_evaluated < self.num_to_evaluate

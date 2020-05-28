@@ -65,7 +65,7 @@ def calc_tp_kldiv(test_count, train_count, epsilon = 1e-6):
         value += p_dash * math.log(p_dash/q_dash)
     return value
 
-#get the count for level 1 [:,:56]
+#get the count for level 1 [:,16:72]
 f=open("../Mario-AI-Framework/levels/original/lvl-1.txt")
 lvl=f.readlines()
 level = []
@@ -75,10 +75,10 @@ for l in lvl:
         for i in l.strip():
             row.append(i)
         level.append(row)
-level=np.array(level)[:,:56]
+level=np.array(level)[:,16:72]
 count1=calc_tp_count(level,1)
 
-#get the count for level 3 [:,:56]
+#get the count for level 3 [:,16:72]
 f=open("../Mario-AI-Framework/levels/original/lvl-3.txt")
 lvl=f.readlines()
 level = []
@@ -88,7 +88,7 @@ for l in lvl:
         for i in l.strip():
             row.append(i)
         level.append(row)
-level=np.array(level)[:,:56]
+level=np.array(level)[:,16:72]
 count3=calc_tp_count(level,1)
 
 def calc_kldivergent_level1(ind,result):
