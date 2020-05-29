@@ -141,7 +141,7 @@ if __name__ == "__main__":
         zero_indices = np.where(map == 0)
         mask[zero_indices] = np.nan
         cmap.set_bad("white") 
-        print(map[150:160,0:5])
+        #print(map[150:160,0:5])
         g = sns.heatmap(map, annot=False, fmt=".0f",
                 #yticklabels=[],
                 vmin=0.0,
