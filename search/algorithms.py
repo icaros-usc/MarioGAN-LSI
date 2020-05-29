@@ -107,7 +107,7 @@ class CMA_ES_Algorithm:
         return ind
     
     def return_evaluated_individual(self, ind):
-        ind.ID = self.individuals_evaluated
+        ind.ID = self.individuals_evaluated_total
         self.individuals_evaluated += 1
         self.individuals_evaluated_total += 1
         self.all_records.loc[ind.ID]=["CMA-ES"]+[ind.param_vector]+ind.statsList+list(ind.features)
