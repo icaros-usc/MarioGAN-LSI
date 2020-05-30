@@ -101,6 +101,8 @@ X_train = np.zeros((X.shape[0], z_dims, map_size, map_size)) * 2
 
 X_train[:, 0, :, :] = 1.0  # Fill with empty space
 
+#from IPython import embed
+#embed()
 # Pad part of level so its a square
 X_train[:X.shape[0], :, :X.shape[1], :X.shape[2]] = X_onehot
 

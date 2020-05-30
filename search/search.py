@@ -99,7 +99,7 @@ def run_trial(num_to_evaluate,algorithm_name,algorithm_config,elite_map_config,t
     if(trial_name.split('_')[1]=="8Binary"):
         feature_map = FeatureMap(num_to_evaluate, feature_ranges,resolutions=(2,)*8)
     elif(trial_name.split('_')[1]=="MarioGANBC"):
-        feature_map = FeatureMap(num_to_evaluate, feature_ranges, resolutions=(161,26))
+        feature_map = FeatureMap(num_to_evaluate, feature_ranges, resolutions=(151,26))
     elif(trial_name.split('_')[1]=="KLBC"):
         feature_map = FeatureMap(num_to_evaluate, feature_ranges, resolutions=(60,60))
     else:

@@ -10,6 +10,8 @@ import argparse
 import os
 import sys
 
+gridsize_x = 60
+gridsize_y = 60
 
 #file_name = "CMAES_MarioGANBC_sim1_elites_freq20.csv"
 
@@ -25,20 +27,20 @@ import sys
 def import_data_file(file_name,feature_ranges):
     fitnesses = []
     num_cells = 0
-    num_cells_max_fitness = 0
     max_fitness = -1
+    num_cells_max_fitness = 0
+
 
     with open(file_name) as csvfile:
             all_records = csv.reader(csvfile, delimiter=',')
             print("importing data from file: " + str(file_name))
             for i,one_map in enumerate(all_records):
                 if i == 499:
-                    map = np.zeros((2,2,2,2,2,2,2,2))
+                    map = np.zeros((60,60))
 
                     for data_point in one_map: 
                         #i=i+1
-                        #from IPython import embed
-                        #embed()
+
                         data_point=data_point[1:-1]
                         feature1Range = feature_ranges[0]
                         feature2Range = feature_ranges[1]
@@ -46,28 +48,27 @@ def import_data_file(file_name,feature_ranges):
                         #if len(data_point_info) < 4:
                         #    sys.exit("Error: " + str("corrupted file"))
 
-                        bc_1 = int(data_point_info[2])
-                        bc_2 = int(data_point_info[3])
-                        bc_3 = int(data_point_info[4])
-                        bc_4 = int(data_point_info[5])
-                        bc_5 = int(data_point_info[6])
-                        bc_6 = int(data_point_info[7])
-                        bc_7 = int(data_point_info[8])
-                        bc_8 = int(data_point_info[9])
-                        #cell_x =(bc_1 - feature1Range[0])/(feature1Range[1]-feature1Range[0])
-                        #cell_y = (bc_2 - feature2Range[0])/(feature2Range[1]-feature2Range[0])
+                        bc_1 = float(data_point_info[2])
+                        bc_2 = float(data_point_info[3])
+                        cell_x =(bc_1 - feature1Range[0])/(feature1Range[1]-feature1Range[0])
+                        cell_y = (bc_2 - feature2Range[0])/(feature2Range[1]-feature2Range[0])
+                        
+                        #from IPython import embed
+                        #embed()
+
                         fitness = float(data_point_info[1][1:-1])
-                        if fitness > max_fitness: 
-                            max_fitness = fitness
+#                        if fitness > max_fitness: 
+#                            max_fitness = fitness
 
                         if fitness == 1.0:
                             num_cells_max_fitness = num_cells_max_fitness + 1
+
                         #cell_x = gridsize-1 - int(cell_x*gridsize)
-                        #cell_x = int()
-                        #cell_y = int(cell_y)
-                        #if cell_x >= gridsize or cell_y >= gridsize: 
-                        #  continue
-                        map[bc_1, bc_2, bc_3, bc_4, bc_5, bc_6, bc_7, bc_8] = fitness
+                        cell_x = int(cell_x*gridsize_x)
+                        cell_y = int(cell_y*gridsize_y)
+                        if cell_x >= gridsize_x or cell_y >= gridsize_y: 
+                          continue
+                        map[cell_x, cell_y] = fitness
                         #cell_indx = int(data_point_info[0])
                         fitnesses.append(fitness)
                         num_cells = num_cells + 1
@@ -83,11 +84,12 @@ def import_data_file(file_name,feature_ranges):
             #if map == []:
             #    sys.exit("Error:corrupted file!")
             QD_score = sum(fitnesses)
-            coverage = float(num_cells/ (2**8))
-            max_fitness_coverage =  float(num_cells_max_fitness/ (num_cells))
+            coverage = float(num_cells/ (gridsize_x * gridsize_y))
+            max_fitness_coverage = float(num_cells_max_fitness/num_cells)
+
             print("QD score: " + str(QD_score))
             print("coverage: " + str(coverage))
-            print("Valid coverage: " + str(max_fitness_coverage))
+            print("Maximum fitness coverage: " + str(max_fitness_coverage))
             return map, QD_score, coverage, max_fitness_coverage
 
 if __name__ == "__main__":
@@ -106,35 +108,29 @@ if __name__ == "__main__":
       column_names.append(bc["name"])
       bc_names.append(bc["name"])
     
-                    #if i == 999 and cell_x == 8 and cell_y == 21:
-                    #    from IPython import embed
-                    #    embed()
-                    # if i == 999 and (cell_indx == 276 or cell_indx == 552 or cell_indx == 196 or cell_indx == 128):
-
-    data_root = 'logs_12/8Binary/CMAME'
+    #from IPython import embed
+    #embed()
+    data_root = 'logs_12/KL/CMAME'
     files = sorted([f for f in os.listdir(data_root)])[0:]
     QD_scores = []
     coverages = []
-#    max_fitnesses = []
-    num_cells_max_fitnesses = []
+    max_fitnesses_coverage = []
     for file_name in files:
     #file_name = files[1]
-    #from IPython import embed
-    #embed()
+      #from IPython import embed
+      #embed()
       file_name = str(data_root + "/" + file_name)
-      map, QD_score, coverage, num_cells_max_fitness = import_data_file(file_name,feature_ranges)
+      map, QD_score, coverage, max_fitness_coverage = import_data_file(file_name,feature_ranges)
       QD_scores.append(QD_score)
       coverages.append(coverage)
-  #    max_fitnesses.append(max_fitness)
-      num_cells_max_fitnesses.append(num_cells_max_fitness)
+      max_fitnesses_coverage.append(max_fitness_coverage)
 
     QD_scores_avg = np.average(QD_scores)
     coverages_avg = np.average(coverages)
-    num_cells_max_fitness_avg = np.average(num_cells_max_fitnesses)
-
+    max_fitnesses_coverage_avg = np.average(max_fitnesses_coverage)
     print("Average QDscore: " + str(QD_scores_avg))
     print("Average Coverage: " + str(coverages_avg))
-    print("Number of Cells Max fitness: " + str(num_cells_max_fitness_avg))
+    print("Average Max fitness coverage: " + str(max_fitnesses_coverage_avg))
 
 #    map, QD_scores_random, coverages_random = import_data_file(RANDOM_file_name,feature_ranges)               
 #    map, QD_scores_cmame_1, coverages_cmame_1 = import_data_file(CMAME_file_name_1,feature_ranges)               
