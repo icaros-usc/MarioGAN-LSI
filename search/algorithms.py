@@ -103,7 +103,7 @@ class CMA_ES_Algorithm:
         return ind
     
     def return_evaluated_individual(self, ind):
-        ind.ID = self.individuals_evaluated
+        ind.ID = self.individuals_evaluated_total
         self.individuals_evaluated += 1
         self.individuals_evaluated_total += 1
         self.all_records.loc[ind.ID]=["CMA-ES"]+[ind.param_vector]+ind.statsList+list(ind.features)
@@ -326,9 +326,11 @@ class CMA_ME_Algorithm:
         self.individuals_evaluated = 0
         self.trial_name=trial_name
         self.bc_names=bc_names
-        
-        self.emitters = [ImprovementEmitter(mutation_power,population_size,self.feature_map)]
-
+        num_emitters = 5
+        #self.emitters = [ImprovementEmitter(mutation_power,population_size,self.feature_map)]
+        self.emitters = []
+        for i in range(0,num_emitters):
+          self.emitters.append(ImprovementEmitter(mutation_power,population_size,self.feature_map))
     def is_running(self):
         return self.individuals_evaluated < self.num_to_evaluate
 

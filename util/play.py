@@ -69,11 +69,16 @@ if __name__ == '__main__':
     #    level=json.dumps(json.load(f))
     
     realLevel=to_level(level)
+
+    realLevel=open("test_level.txt").read()
+
     agent = Agent()
     game = MarioGame()
-    result = game.runGame(agent, realLevel, 20, 0, True)
+    result = game.runGame(agent, realLevel, 20, 0,True)
+    from IPython import embed
+    embed()
     print(realLevel)
-    #result = game.playGame(output, 200, 0)
+    #result = game.playGame(realLevel, 200, 0)
     #print(result)
     print("****************************************************************")
     print("Game Status: " + result.getGameStatus().toString() + " Percentage Completion: " + str(result.getCompletionPercentage()))

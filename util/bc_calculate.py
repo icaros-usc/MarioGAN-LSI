@@ -75,7 +75,7 @@ for l in lvl:
         for i in l.strip():
             row.append(i)
         level.append(row)
-level=np.array(level)[:,:56]
+level=np.array(level)[:,16:72]
 count1=calc_tp_count(level,1)
 
 #get the count for level 3 [:,:56]
@@ -88,7 +88,7 @@ for l in lvl:
         for i in l.strip():
             row.append(i)
         level.append(row)
-level=np.array(level)[:,:56]
+level=np.array(level)[:,16:72]
 count3=calc_tp_count(level,1)
 
 def calc_kldivergent_level1(ind,result):
@@ -101,7 +101,7 @@ def calc_kldivergent_level1(ind,result):
         strlevel.append(row)
     strlevel=np.array(strlevel)[:,:56]
     ind_count=calc_tp_count(strlevel,1)
-    return calc_tp_kldiv(ind_count,count1)
+    return 0.5*calc_tp_kldiv(ind_count,count1)+0.5*calc_tp_kldiv(count1,ind_count)
 
 def calc_kldivergent_level3(ind,result):
     strlevel=[]
@@ -113,7 +113,7 @@ def calc_kldivergent_level3(ind,result):
         strlevel.append(row)
     strlevel=np.array(strlevel)[:,:56]
     ind_count=calc_tp_count(strlevel,1)
-    return calc_tp_kldiv(ind_count,count3)
+    return 0.5*calc_tp_kldiv(ind_count,count3)+0.5*calc_tp_kldiv(count3,ind_count)
 
 def calc_jump(ind,result):
     num_jumps=result.getNumJumps()
