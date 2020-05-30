@@ -8,9 +8,9 @@ import csv
 from util.SearchHelper import *
 from util.gan_generator import *
 
-num_params = 96
+num_params = 32
 boundary_value = 1
-batch_size = 3
+batch_size =1 
 nz = 32
 record_frequency=20
 

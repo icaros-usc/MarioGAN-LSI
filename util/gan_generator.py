@@ -5,7 +5,7 @@ from torch.autograd import Variable
 import util.models.dcgan as dcgan
 import toml
 
-num_params = 96
+
 boundary_value = 5.12
 nz = 32
 
@@ -26,4 +26,6 @@ def gan_generate(x,batchSize,nz,model_path):
     levels.data = levels.data[:, :, :16, :56]
     im = levels.data.cpu().numpy()
     im = numpy.argmax( im, axis = 1)
+    #from IPython import embed
+    #embed()
     return json.dumps(im[0].tolist())
