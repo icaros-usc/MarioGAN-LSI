@@ -98,7 +98,7 @@ class CMA_ES_Algorithm:
         ind.ID = self.individuals_evaluated_total
         self.individuals_evaluated += 1
         self.individuals_evaluated_total += 1
-	self.feature_map.add(ind)
+        self.feature_map.add(ind)
         self.all_records.loc[ind.ID]=["CMA-ES"]+[ind.param_vector]+ind.statsList+list(ind.features)
 
         if self.individuals_evaluated_total % record_frequency == 0:
@@ -213,7 +213,7 @@ class ImprovementEmitter:
         return False
 
     def generate_individual(self,model_path):
-	unscaled_params = np.random.normal(0.0, self.mutation_power, num_params) * np.sqrt(self.C.eigenvalues)
+        unscaled_params = np.random.normal(0.0, self.mutation_power, num_params) * np.sqrt(self.C.eigenvalues)
         unscaled_params = np.matmul(self.C.eigenbasis, unscaled_params)
         unscaled_params = self.mean + np.array(unscaled_params)
         ind = Individual()
@@ -343,7 +343,7 @@ class RandomDirectionEmitter:
         return False
 
     def generate_individual(self,model_path):
-	unscaled_params = np.random.normal(0.0, self.mutation_power, num_params) * np.sqrt(self.C.eigenvalues)
+        unscaled_params = np.random.normal(0.0, self.mutation_power, num_params) * np.sqrt(self.C.eigenvalues)
         unscaled_params = np.matmul(self.C.eigenbasis, unscaled_params)
         unscaled_params = self.mean + np.array(unscaled_params)
         ind = Individual()
@@ -456,7 +456,7 @@ class CMA_ME_Algorithm:
         return self.individuals_evaluated < self.num_to_evaluate
 
 
-    def generate_individual(self):
+    def generate_individual(self, model_path):
         ind = None
         if self.individuals_disbatched < self.initial_population:
             ind = Individual()
@@ -477,7 +477,7 @@ class CMA_ME_Algorithm:
                 if self.emitters[i].individuals_disbatched < emitter.individuals_disbatched:
                     emitter = self.emitters[i]
                     pos = i
-            ind = emitter.generate_individual()
+            ind = emitter.generate_individual(model_path)
             ind.emitter_id = pos
 
         self.individuals_disbatched += 1
