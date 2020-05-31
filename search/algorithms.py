@@ -9,7 +9,7 @@ from util.SearchHelper import *
 from util.gan_generator import *
 
 num_params = 32
-
+record_frequency = 20
 class CMA_ES_Algorithm:
 
     def __init__(self, num_to_evaluate, mutation_power, population_size, feature_map, trial_name, column_names, bc_names):
