@@ -9,9 +9,6 @@ from util.SearchHelper import *
 from util.gan_generator import *
 
 num_params = 32
-batch_size =1 
-nz = 32
-record_frequency=20
 
 class CMA_ES_Algorithm:
 
@@ -95,8 +92,6 @@ class CMA_ES_Algorithm:
         unscaled_params = self.mean + np.array(unscaled_params)
         ind = Individual()
         ind.param_vector = unscaled_params
-        level=gan_generate(ind.param_vector,batch_size,nz,model_path)
-        ind.level=level
         return ind
     
     def return_evaluated_individual(self, ind):
@@ -223,8 +218,6 @@ class ImprovementEmitter:
         unscaled_params = self.mean + np.array(unscaled_params)
         ind = Individual()
         ind.param_vector = unscaled_params
-        level=gan_generate(ind.param_vector,batch_size,nz,model_path)
-        ind.level=level
 
         self.individuals_disbatched += 1
 
@@ -355,8 +348,6 @@ class RandomDirectionEmitter:
         unscaled_params = self.mean + np.array(unscaled_params)
         ind = Individual()
         ind.param_vector = unscaled_params
-        level=gan_generate(ind.param_vector,batch_size,nz,model_path)
-        ind.level=level
 
         self.individuals_disbatched += 1
 
@@ -536,9 +527,6 @@ class MapElitesAlgorithm:
             parent = self.feature_map.get_random_elite()
             ind.param_vector = parent.param_vector + np.random.normal(0.0, self.mutation_power, num_params)
 
-        level=gan_generate(ind.param_vector,batch_size,nz,model_path)
-        ind.level=level
- 
         self.individuals_disbatched += 1
         return ind
 
@@ -595,8 +583,6 @@ class ISOLineDDAlgorithm:
             
             ind.param_vector = random_vector + line_vector + p1
 
-        level=gan_generate(ind.param_vector,batch_size,nz,model_path)
-        ind.level=level
         return ind
 
     def return_evaluated_individual(self, ind):
@@ -641,9 +627,6 @@ class RandomGenerator:
         unscaled_params = np.random.normal(0.0, 1.0, num_params)
         ind.param_vector = unscaled_params
 
-        level=gan_generate(ind.param_vector,batch_size,nz,model_path)
-        ind.level=level
- 
         return ind
 
     def return_evaluated_individual(self, ind):
