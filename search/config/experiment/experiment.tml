@@ -3,63 +3,63 @@ Visualize=false
 
 [[Trials]]
 num_trials=20
-trial_config= "Search/config/trial/CMAME_MarioGANBC.tml"
+trial_config= "search/config/trial/CMAME_MarioGANBC.tml"
 
 [[Trials]]
 num_trials=20
-trial_config="Search/config/trial/CMAES_MarioGANBC.tml"
+trial_config="search/config/trial/CMAES_MarioGANBC.tml"
 
 [[Trials]]
 num_trials=20
-trial_config="Search/config/trial/MAPELITES_MarioGANBC.tml"
+trial_config="search/config/trial/MAPELITES_MarioGANBC.tml"
 
 [[Trials]]
 num_trials=20
-trial_config="Search/config/trial/ISOLINEDD_MarioGANBC.tml"
+trial_config="search/config/trial/ISOLINEDD_MarioGANBC.tml"
 
 [[Trials]]
 num_trials=20
-trial_config="Search/config/trial/RANDOM_MarioGANBC.tml"
+trial_config="search/config/trial/RANDOM_MarioGANBC.tml"
 
 [[Trials]]
 num_trials=20
-trial_config= "Search/config/trial/CMAME_KLBC.tml"
+trial_config= "search/config/trial/CMAME_KLBC.tml"
 
 [[Trials]]
 num_trials=20
-trial_config="Search/config/trial/CMAES_KLBC.tml"
+trial_config="search/config/trial/CMAES_KLBC.tml"
 
 [[Trials]]
 num_trials=20
-trial_config="Search/config/trial/MAPELITES_KLBC.tml"
+trial_config="search/config/trial/MAPELITES_KLBC.tml"
 
 [[Trials]]
 num_trials=20
-trial_config="Search/config/trial/ISOLINEDD_KLBC.tml"
+trial_config="search/config/trial/ISOLINEDD_KLBC.tml"
 
 [[Trials]]
 num_trials=20
-trial_config="Search/config/trial/RANDOM_KLBC.tml"
+trial_config="search/config/trial/RANDOM_KLBC.tml"
 
 [[Trials]]
 num_trials=20
-trial_config= "Search/config/trial/CMAME_8Binary.tml"
+trial_config= "search/config/trial/CMAME_8Binary.tml"
 
 [[Trials]]
 num_trials=20
-trial_config="Search/config/trial/CMAES_8Binary.tml"
+trial_config="search/config/trial/CMAES_8Binary.tml"
 
 [[Trials]]
 num_trials=20
-trial_config="Search/config/trial/MAPELITES_8Binary.tml"
+trial_config="search/config/trial/MAPELITES_8Binary.tml"
 
 [[Trials]]
 num_trials=20
-trial_config="Search/config/trial/ISOLINEDD_8Binary.tml"
+trial_config="search/config/trial/ISOLINEDD_8Binary.tml"
 
 [[Trials]]
 num_trials=20
-trial_config="Search/config/trial/RANDOM_8Binary.tml"
+trial_config="search/config/trial/RANDOM_8Binary.tml"
 
 
 
