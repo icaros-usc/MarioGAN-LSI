@@ -436,7 +436,7 @@ class RandomDirectionEmitter:
 
 class CMA_ME_Algorithm:
 
-    def __init__(self, mutation_power, initial_population, num_to_evaluate, population_size, feature_map, trial_name, column_names, bc_names):     
+    def __init__(self, mutation_power, initial_population, num_to_evaluate, population_size, feature_map, trial_name, column_names, bc_names, emitter_type):     
         self.all_records = pd.DataFrame(columns=column_names)
 
         self.initial_population = initial_population
@@ -450,6 +450,7 @@ class CMA_ME_Algorithm:
         self.trial_name=trial_name
         self.bc_names=bc_names
 
+        self.emitter_type = emitter_type
         self.emitters = None
 
     def is_running(self):
@@ -467,8 +468,12 @@ class CMA_ME_Algorithm:
         else:
             if self.emitters == None:
                 self.emitters = []
-                #self.emitters += [RandomDirectionEmitter(self.mutation_power, self.feature_map) for i in range(1)]
-                self.emitters += [ImprovementEmitter(self.mutation_power, self.feature_map) for i in range(1)]
+                if self.emitter_type == "rnd":
+                  self.emitters += [RandomDirectionEmitter(self.mutation_power, self.feature_map) for i in range(1)]  
+                elif self.emitter_type == "opt":
+                  self.emitters += [ImprovementEmitter(self.mutation_power, self.feature_map) for i in range(1)]
+                else: 
+                  sys.exit("Error: unknown emitter type. Exiting program.")
                 #self.emitters += [OptimizingEmitter(self.mutation_power, self.feature_map) for i in range(1)]
 
             pos = 0
