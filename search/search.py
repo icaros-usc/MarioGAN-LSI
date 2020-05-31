@@ -137,7 +137,7 @@ def run_trial(num_to_evaluate,algorithm_name,algorithm_config,elite_map_config,t
     
     simulation=1
     while algorithm_instance.is_running():
-        ind = algorithm_instance.generate_individual(model_path)
+        ind = algorithm_instance.generate_individual()
 
         ind.level=gan_generate(ind.param_vector,batch_size,nz,model_path)
         ind.fitness = evaluate(ind,visualize)

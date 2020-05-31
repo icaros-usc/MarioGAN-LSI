@@ -86,7 +86,7 @@ class CMA_ES_Algorithm:
     def is_running(self):
         return self.individuals_evaluated_total < self.num_to_evaluate
 
-    def generate_individual(self,model_path):
+    def generate_individual(self):
         unscaled_params = np.random.normal(0.0, self.mutation_power, num_params) * np.sqrt(self.C.eigenvalues)
         unscaled_params = np.matmul(self.C.eigenbasis, unscaled_params)
         unscaled_params = self.mean + np.array(unscaled_params)
@@ -212,7 +212,7 @@ class ImprovementEmitter:
 
         return False
 
-    def generate_individual(self,model_path):
+    def generate_individual(self):
         unscaled_params = np.random.normal(0.0, self.mutation_power, num_params) * np.sqrt(self.C.eigenvalues)
         unscaled_params = np.matmul(self.C.eigenbasis, unscaled_params)
         unscaled_params = self.mean + np.array(unscaled_params)
@@ -342,7 +342,7 @@ class RandomDirectionEmitter:
 
         return False
 
-    def generate_individual(self,model_path):
+    def generate_individual(self):
         unscaled_params = np.random.normal(0.0, self.mutation_power, num_params) * np.sqrt(self.C.eigenvalues)
         unscaled_params = np.matmul(self.C.eigenbasis, unscaled_params)
         unscaled_params = self.mean + np.array(unscaled_params)
@@ -456,7 +456,7 @@ class CMA_ME_Algorithm:
         return self.individuals_evaluated < self.num_to_evaluate
 
 
-    def generate_individual(self, model_path):
+    def generate_individual(self):
         ind = None
         if self.individuals_disbatched < self.initial_population:
             ind = Individual()
@@ -477,7 +477,7 @@ class CMA_ME_Algorithm:
                 if self.emitters[i].individuals_disbatched < emitter.individuals_disbatched:
                     emitter = self.emitters[i]
                     pos = i
-            ind = emitter.generate_individual(model_path)
+            ind = emitter.generate_individual()
             ind.emitter_id = pos
 
         self.individuals_disbatched += 1
@@ -518,7 +518,7 @@ class MapElitesAlgorithm:
     def is_running(self):
         return self.individuals_evaluated < self.num_to_evaluate
 
-    def generate_individual(self,model_path):
+    def generate_individual(self):
         
         ind = Individual()
         if self.individuals_disbatched < self.initial_population:
@@ -567,7 +567,7 @@ class ISOLineDDAlgorithm:
     def is_running(self):
         return self.individuals_evaluated < self.num_to_evaluate
 
-    def generate_individual(self,model_path):
+    def generate_individual(self):
         
         ind = Individual()
         if self.individuals_evaluated < self.initial_population:
@@ -621,7 +621,7 @@ class RandomGenerator:
     def is_running(self):
         return self.individuals_evaluated < self.num_to_evaluate
 
-    def generate_individual(self,model_path):
+    def generate_individual(self):
         
         ind = Individual()
         unscaled_params = np.random.normal(0.0, 1.0, num_params)
