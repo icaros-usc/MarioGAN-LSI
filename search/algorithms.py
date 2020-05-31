@@ -555,7 +555,7 @@ class MapElitesAlgorithm:
                 wr.writerow(rowData)
                 logFile.close()
 
-class ISOLineDDAlgorithm:
+class MapElitesLineAlgorithm:
 
     def __init__(self, mutation_power1,mutation_power2, initial_population, num_to_evaluate, feature_map,trial_name,column_names,bc_names):
         self.num_to_evaluate = num_to_evaluate
@@ -596,7 +596,7 @@ class ISOLineDDAlgorithm:
         self.individuals_evaluated += 1
         
         self.feature_map.add(ind)
-        self.all_records.loc[ind.ID]=["ISOLine-DD"]+[ind.param_vector]+ind.statsList+list(ind.features)
+        self.all_records.loc[ind.ID]=["MAP-Elites(line)"]+[ind.param_vector]+ind.statsList+list(ind.features)
 
         if self.individuals_evaluated % record_frequency == 0:
             elites = [self.feature_map.elite_map[x] for x in self.feature_map.elite_map]

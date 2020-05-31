@@ -126,11 +126,11 @@ def run_trial(num_to_evaluate,algorithm_name,algorithm_config,elite_map_config,t
         initial_population=algorithm_config["initial_population"]
         algorithm_instance=MapElitesAlgorithm(mutation_power, initial_population, num_to_evaluate, feature_map,trial_name,column_names,bc_names)
     elif algorithm_name=="ISOLINEDD":
-        print("Start Running ISOLINEDD")
+        print("Start Running MAP-Elites with ISOLINEDD")
         mutation_power1=algorithm_config["mutation_power1"]
         mutation_power2=algorithm_config["mutation_power2"]
         initial_population=algorithm_config["initial_population"]
-        algorithm_instance=ISOLineDDAlgorithm(mutation_power1, mutation_power2,initial_population, num_to_evaluate, feature_map,trial_name,column_names,bc_names)
+        algorithm_instance=MapElitesLineAlgorithm(mutation_power1, mutation_power2,initial_population, num_to_evaluate, feature_map,trial_name,column_names,bc_names)
     elif algorithm_name=="RANDOM":
         print("Start Running RANDOM")
         algorithm_instance=RandomGenerator(num_to_evaluate,feature_map,trial_name,column_names,bc_names)
