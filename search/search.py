@@ -114,7 +114,8 @@ def run_trial(num_to_evaluate,algorithm_name,algorithm_config,elite_map_config,t
         print("Start Running CMAME")
         mutation_power=algorithm_config["mutation_power"]
         population_size=algorithm_config["population_size"]
-        algorithm_instance=CMA_ME_Algorithm(mutation_power,num_to_evaluate,population_size,feature_map,trial_name,column_names,bc_names)
+        initial_population=algorithm_config["initial_population"]
+        algorithm_instance=CMA_ME_Algorithm(mutation_power,initial_population,num_to_evaluate,population_size,feature_map,trial_name,column_names,bc_names)
     elif algorithm_name=="MAPELITES":
         print("Start Running MAPELITES")
         mutation_power=algorithm_config["mutation_power"]
