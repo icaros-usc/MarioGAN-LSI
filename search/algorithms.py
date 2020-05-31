@@ -487,7 +487,11 @@ class CMA_ME_Algorithm:
         ind.ID = self.individuals_evaluated
         self.individuals_evaluated += 1
         self.all_records.loc[ind.ID] = ["CMA-ME"]+[ind.param_vector]+ind.statsList+list(ind.features)
-        self.emitters[ind.emitter_id].return_evaluated_individual(ind)
+
+        if ind.emitter_id == -1:
+            self.feature_map.add(ind)
+        else:
+            self.emitters[ind.emitter_id].return_evaluated_individual(ind)
 
         if self.individuals_evaluated % record_frequency == 0:
             elites = [self.feature_map.elite_map[x] for x in self.feature_map.elite_map]
