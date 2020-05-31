@@ -468,10 +468,12 @@ class CMA_ME_Algorithm:
         else:
             if self.emitters == None:
                 self.emitters = []
+                #from IPython import embed
+                #embed()
                 if self.emitter_type == "rnd":
-                  self.emitters += [RandomDirectionEmitter(self.mutation_power, self.feature_map) for i in range(1)]  
+                  self.emitters += [RandomDirectionEmitter(self.mutation_power, self.population_size, self.feature_map) for i in range(1)]  
                 elif self.emitter_type == "opt":
-                  self.emitters += [ImprovementEmitter(self.mutation_power, self.feature_map) for i in range(1)]
+                  self.emitters += [ImprovementEmitter(self.mutation_power, self.population_size, self.feature_map) for i in range(1)]
                 else: 
                   sys.exit("Error: unknown emitter type. Exiting program.")
                 #self.emitters += [OptimizingEmitter(self.mutation_power, self.feature_map) for i in range(1)]
