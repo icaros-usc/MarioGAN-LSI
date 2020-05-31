@@ -45,6 +45,10 @@ parser.add_argument('-c','--config', help='path of experiment config file',requi
 opt = parser.parse_args()
 """
 
+batch_size =1
+nz = 32
+record_frequency=20
+
 if not os.path.exists("logs"):
     os.mkdir("logs")
 
@@ -134,10 +138,15 @@ def run_trial(num_to_evaluate,algorithm_name,algorithm_config,elite_map_config,t
     simulation=1
     while algorithm_instance.is_running():
         ind = algorithm_instance.generate_individual(model_path)
+
+        ind.level=gan_generate(ind.param_vector,batch_size,nz,model_path)
         ind.fitness = evaluate(ind,visualize)
+
         algorithm_instance.return_evaluated_individual(ind)
+
         print(str(simulation)+"/"+str(num_to_evaluate)+" simulations finished")
         simulation=simulation+1
+
     algorithm_instance.all_records.to_csv("logs/"+trial_name+"_all_simulations.csv")
 
 """
