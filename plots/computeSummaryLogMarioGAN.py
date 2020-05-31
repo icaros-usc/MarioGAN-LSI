@@ -10,7 +10,7 @@ import argparse
 import os
 import sys
 
-gridsize_x = 151
+gridsize_x = 161
 gridsize_y = 26
 
 #file_name = "CMAES_MarioGANBC_sim1_elites_freq20.csv"
@@ -36,7 +36,7 @@ def import_data_file(file_name,feature_ranges):
             print("importing data from file: " + str(file_name))
             for i,one_map in enumerate(all_records):
                 if i == 499:
-                    map = np.zeros((151,26))
+                    map = np.zeros((161,26))
 
                     for data_point in one_map: 
                         #i=i+1
@@ -110,8 +110,8 @@ if __name__ == "__main__":
     
     #from IPython import embed
     #embed()
-    data_root = '../logs_12/MarioGAN/CMAES'
-    files = sorted([f for f in os.listdir(data_root)])[1:]
+    data_root = '../logs_newcmame/MarioGAN/CMAMErnd'
+    files = sorted([f for f in os.listdir(data_root)])[0:]
     QD_scores = []
     coverages = []
     max_fitnesses_coverage = []

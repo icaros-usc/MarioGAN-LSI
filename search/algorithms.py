@@ -461,8 +461,10 @@ class CMA_ME_Algorithm:
         ind = None
         if self.individuals_disbatched < self.initial_population:
             ind = Individual()
+            #from IPython import embed
+            #embed()
             if self.individuals_evaluated < self.initial_population:
-                unscaled_params = np.random.normal(0.0, boundary_value, num_params)
+                unscaled_params = np.random.normal(0.0, 1.0, num_params)
                 ind.param_vector = unscaled_params
             ind.emitter_id = -1
         else:
@@ -471,9 +473,9 @@ class CMA_ME_Algorithm:
                 #from IPython import embed
                 #embed()
                 if self.emitter_type == "rnd":
-                  self.emitters += [RandomDirectionEmitter(self.mutation_power, self.population_size, self.feature_map) for i in range(1)]  
+                  self.emitters += [RandomDirectionEmitter(self.mutation_power, self.population_size, self.feature_map) for i in range(3)]  
                 elif self.emitter_type == "imp":
-                  self.emitters += [ImprovementEmitter(self.mutation_power, self.population_size, self.feature_map) for i in range(1)]
+                  self.emitters += [ImprovementEmitter(self.mutation_power, self.population_size, self.feature_map) for i in range(3)]
                 else: 
                   sys.exit("Error: unknown emitter type. Exiting program.")
                 #self.emitters += [OptimizingEmitter(self.mutation_power, self.feature_map) for i in range(1)]

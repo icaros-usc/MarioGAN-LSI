@@ -110,7 +110,7 @@ if __name__ == "__main__":
     
     #from IPython import embed
     #embed()
-    data_root = 'logs_12/KL/CMAME'
+    data_root = 'logs_newcmame/KL/CMAMEimp'
     files = sorted([f for f in os.listdir(data_root)])[0:]
     QD_scores = []
     coverages = []
