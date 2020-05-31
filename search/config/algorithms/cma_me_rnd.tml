@@ -1,0 +1,5 @@
+
+mutation_power=0.2
+population_size=37
+initial_population=10
+emitter_type = "rnd"

@@ -1,0 +1,5 @@
+algorithm = "CMAME"
+trial_name="CMAME_8Binary"
+num_simulations=10000
+algorithm_config = "search/config/algorithms/cma_me_rnd.tml"
+elite_map_config = "search/config/elite_map/8Binary.tml"
