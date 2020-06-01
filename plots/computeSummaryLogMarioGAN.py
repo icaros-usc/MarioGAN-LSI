@@ -10,7 +10,7 @@ import argparse
 import os
 import sys
 
-gridsize_x = 161
+gridsize_x = 151
 gridsize_y = 26
 
 #file_name = "CMAES_MarioGANBC_sim1_elites_freq20.csv"
@@ -36,7 +36,7 @@ def import_data_file(file_name,feature_ranges):
             print("importing data from file: " + str(file_name))
             for i,one_map in enumerate(all_records):
                 if i == 499:
-                    map = np.zeros((161,26))
+                    map = np.zeros((gridsize_x,gridsize_y))
 
                     for data_point in one_map: 
                         #i=i+1

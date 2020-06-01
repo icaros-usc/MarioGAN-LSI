@@ -117,9 +117,9 @@ if __name__ == "__main__":
                     #    embed()
                     # if i == 999 and (cell_indx == 276 or cell_indx == 552 or cell_indx == 196 or cell_indx == 128):
   
-    algorithm = "Random"
+    algorithm = "CMA-ES"
 
-    data_root = str("../test_file/test_map/" + str(algorithm))
+    data_root = str("../large_logs/test_map/" + str(algorithm))
     files = sorted([f for f in os.listdir(data_root)])[0:]
     QD_scores = []
     coverages = []
@@ -169,10 +169,10 @@ if __name__ == "__main__":
                 #vmin=np.nanmin(fitnessMap),
                 #vmax=np.nanmax(fitnessMap))
         fig = g.get_figure()
-        g.set(xticks = [0,5*60.0/5.17])
-        g.set(xticklabels = ['0','5'])
-        g.set(yticks = [60-4.0*60/4.17,60])
-        g.set(yticklabels = ['4','0'])
+        g.set(xticks = [0,60])
+        g.set(xticklabels = ['0','4.5'])
+        g.set(yticks = [0,60])
+        g.set(yticklabels = ['4.5','0'])
         g.set(xlabel = "KL Divergence 1")
         g.set(ylabel = "KL Divergence 2")
         g.set(title = str(algorithm))

@@ -88,7 +88,7 @@ if __name__ == "__main__":
     rows.append(['Algorithm', 'Trial', 'Evaluations', 'Cells Occupied', 'QD-Score'])
 
     #data_root = 'test_file'
-    data_root = '../logs_12/8Binary/CMAME'
+    data_root = '../large_logs/8Binary/CMAME'
     files = sorted([f for f in os.listdir(data_root)])[0:]
     #from IPython import embed
     #embed()
@@ -100,7 +100,7 @@ if __name__ == "__main__":
       trial_indx = trial_indx + 1
 
     #data_root = 'test_file'
-    data_root = '../logs_12/8Binary/ME'
+    data_root = '../large_logs/8Binary/ME'
     files = sorted([f for f in os.listdir(data_root)])[0:]
     #from IPython import embed
     #embed()
@@ -112,7 +112,7 @@ if __name__ == "__main__":
       trial_indx = trial_indx + 1
 
     #data_root = 'test_file'
-    data_root = '../logs_12/8Binary/MEline'
+    data_root = '../large_logs/8Binary/MEline'
     files = sorted([f for f in os.listdir(data_root)])[0:]
     #from IPython import embed
     #embed()
@@ -124,7 +124,7 @@ if __name__ == "__main__":
       trial_indx = trial_indx + 1
 
 
-    data_root = '../logs_12/8Binary/Random'
+    data_root = '../large_logs/8Binary/Random'
     files = sorted([f for f in os.listdir(data_root)])[0:]
     #from IPython import embed
     #embed()
@@ -135,7 +135,7 @@ if __name__ == "__main__":
       QD_score_file = import_data_file(file_name,feature_ranges, 'Random', trial_indx)
       trial_indx = trial_indx + 1
 
-    data_root = '../logs_12/8Binary/CMAES'
+    data_root = '../large_logs/8Binary/CMAES'
     files = sorted([f for f in os.listdir(data_root)])[0:]
     #from IPython import embed
     #embed()
@@ -145,7 +145,7 @@ if __name__ == "__main__":
       file_name = str(data_root + "/" + file_name)
       QD_score_file = import_data_file(file_name,feature_ranges, 'CMA-ES', trial_indx)
       trial_indx = trial_indx + 1
-    summary_filename = '../logs_12/8Binary/summary.csv'
+    summary_filename = '../large_logs/8Binary/summary.csv'
     with open(summary_filename, 'w') as csv_file:
         csv_writer = csv.writer(csv_file, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
         for r in rows:

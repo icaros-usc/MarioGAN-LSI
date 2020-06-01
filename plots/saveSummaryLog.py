@@ -11,8 +11,8 @@ import os
 import sys
 
 
-gridsize_x = 151
-gridsize_y = 26
+gridsize_x = 60
+gridsize_y = 60
 rows = []
 
 def import_data_file(file_name,feature_ranges, algorithm_name, trial_indx):
@@ -73,7 +73,7 @@ def import_data_file(file_name,feature_ranges, algorithm_name, trial_indx):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
-    domain = "MarioGAN"
+    domain = "KL"
 
     parser.add_argument('-c','--config', help='path of BC config file',required=True)
     opt = parser.parse_args()
@@ -91,7 +91,7 @@ if __name__ == "__main__":
     rows.append(['Algorithm', 'Trial', 'Evaluations', 'Cells Occupied', 'QD-Score'])
 
     #data_root = 'test_file'
-    data_root = str("../logs_12/" + str(domain)+ "/CMAME")
+    data_root = str("../large_logs/" + str(domain)+ "/CMAME")
     files = sorted([f for f in os.listdir(data_root)])[0:]
     #from IPython import embed
     #embed()
@@ -105,7 +105,7 @@ if __name__ == "__main__":
       trial_indx = trial_indx + 1
 
     #data_root = 'test_file'
-    data_root = str("../logs_12/" + str(domain)+ "/ME")
+    data_root = str("../large_logs/" + str(domain)+ "/ME")
     files = sorted([f for f in os.listdir(data_root)])[0:]
     #from IPython import embed
     #embed()
@@ -117,7 +117,7 @@ if __name__ == "__main__":
       trial_indx = trial_indx + 1
 
     #data_root = 'test_file'
-    data_root = str("../logs_12/" + str(domain)+ "/MEline")
+    data_root = str("../large_logs/" + str(domain)+ "/MEline")
     files = sorted([f for f in os.listdir(data_root)])[0:]
     #from IPython import embed
     #embed()
@@ -129,7 +129,7 @@ if __name__ == "__main__":
       trial_indx = trial_indx + 1
 
 
-    data_root =str("../logs_12/" + str(domain)+ "/Random")
+    data_root =str("../large_logs/" + str(domain)+ "/Random")
     files = sorted([f for f in os.listdir(data_root)])[0:]
     #from IPython import embed
     #embed()
@@ -141,7 +141,7 @@ if __name__ == "__main__":
       trial_indx = trial_indx + 1
 
 
-    data_root =str("../logs_12/" + str(domain)+ "/CMAES")
+    data_root =str("../large_logs/" + str(domain)+ "/CMAES")
     files = sorted([f for f in os.listdir(data_root)])[0:]
     #from IPython import embed
     #embed()
@@ -151,7 +151,7 @@ if __name__ == "__main__":
       file_name = str(data_root + "/" + file_name)
       QD_score_file = import_data_file(file_name,feature_ranges, 'CMA-ES', trial_indx)
       trial_indx = trial_indx + 1
-    summary_filename = "../logs_12/" + str(domain) + "/summary.csv"
+    summary_filename = "../large_logs/" + str(domain) + "/summary.csv"
     with open(summary_filename, 'w') as csv_file:
         csv_writer = csv.writer(csv_file, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
         for r in rows:
