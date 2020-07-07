@@ -3,7 +3,7 @@ Visualize=false
 
 [[Trials]]
 num_trials=5
-trial_config= "search/config/trial/CMAME_MarioGANBC.tml"
+trial_config= "search/config/trial/CMAMEimp_MarioGANBC.tml"
 
 
 

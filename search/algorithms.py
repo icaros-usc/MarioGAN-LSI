@@ -473,9 +473,9 @@ class CMA_ME_Algorithm:
                 #from IPython import embed
                 #embed()
                 if self.emitter_type == "rnd":
-                  self.emitters += [RandomDirectionEmitter(self.mutation_power, self.population_size, self.feature_map) for i in range(3)]  
+                  self.emitters += [RandomDirectionEmitter(self.mutation_power, self.population_size, self.feature_map) for i in range(5)]  
                 elif self.emitter_type == "imp":
-                  self.emitters += [ImprovementEmitter(self.mutation_power, self.population_size, self.feature_map) for i in range(3)]
+                  self.emitters += [ImprovementEmitter(self.mutation_power, self.population_size, self.feature_map) for i in range(5)]
                 else: 
                   sys.exit("Error: unknown emitter type. Exiting program.")
                 #self.emitters += [OptimizingEmitter(self.mutation_power, self.feature_map) for i in range(1)]
@@ -527,6 +527,7 @@ class MapElitesAlgorithm:
         self.all_records=pd.DataFrame(columns=column_names)
         self.trial_name=trial_name
         self.bc_names=bc_names
+        self.individuals_disbatched = 0
 
     def is_running(self):
         return self.individuals_evaluated < self.num_to_evaluate

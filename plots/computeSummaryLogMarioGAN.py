@@ -110,7 +110,7 @@ if __name__ == "__main__":
     
     #from IPython import embed
     #embed()
-    data_root = '../logs_newcmame/MarioGAN/CMAMErnd'
+    data_root = '../logs/MarioGAN/Random'
     files = sorted([f for f in os.listdir(data_root)])[0:]
     QD_scores = []
     coverages = []

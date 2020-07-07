@@ -182,6 +182,10 @@ def import_data_file(file_name,feature_ranges):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
+    
+
+   # rc('text', usetex=True)
+
 
     parser.add_argument('-c','--config', help='path of BC config file',required=True)
     opt = parser.parse_args()
@@ -244,11 +248,15 @@ if __name__ == "__main__":
         numTicks = 10#11
         plt.figure(figsize=(10,9))
         sns.set(font_scale=2.5)
+        sns.set_style({'font.family':'serif', 'font.serif':'Palatino'})
         #map = np.flip(map,0)
         mask = np.zeros_like(map)
         zero_indices = np.where(map == 0)
         mask[zero_indices] = np.nan
         cmap.set_bad("white") 
+        #plt.text(150.5, 1.08, "sdfsd",
+        # horizontalalignment='center',
+        # fontsize=20)    
         g = sns.heatmap(map, annot=False, fmt=".0f",
                 #yticklabels=[],
                 vmin=0.0,
@@ -257,7 +265,7 @@ if __name__ == "__main__":
                 cmap = cmap,
                 rasterized=True,
                 #square = True,
-                cbar = True)
+                cbar = False)
                 #vmin=np.nanmin(fitnessMap),
                 #vmax=np.nanmax(fitnessMap))
         fig = g.get_figure()
@@ -265,15 +273,19 @@ if __name__ == "__main__":
         #g.set(xticklabels = ['0','25'])
         #g.set(yticks = [0,150])
         #g.set(yticklabels = [150,0])
-        g.set(xlabel = "# Sky Tiles")
-        g.set(ylabel = "# Enemies")
-        g.set(title = "CMA-ME")
+    #plt.title("sfsdF",y = 0.1)
+        #for ax, title in zip(g.axes.flat, col_order):
+        #    ax.set_title(title)
+        #    ax.text(0.85, 0.85,'Text Here', fontsize=9) #add text
+        
+        g.set(xlabel = "Number of Sky Tiles")
+        g.set(ylabel = "Number of Enemies")
+        #g.set(title = "CMA-ME")
 
         g.set(xticks = [0,150])
         g.set(xticklabels = ['0','150'])
         g.set(yticks = [0,25])
         g.set(yticklabels = [25,0])
-
 #        plt.xticklabels=['0','4.17'], 
         for item in g.get_xticklabels():
             item.set_rotation(0)
@@ -288,7 +300,7 @@ if __name__ == "__main__":
       
         indx_1 = [24,np.max(np.nonzero(mapTindx[24,:]))]
         indx_2 = [np.min(np.nonzero(mapTindx[:,0])),0]
-        indx_3 = [17,np.max(np.nonzero(mapTindx[17,:]))]
+        indx_3 = [16,np.max(np.nonzero(mapTindx[16,:]))]
         lvl1_id = int(mapTindx[indx_1[0],indx_1[1]])
         lvl2_id = int(mapTindx[indx_2[0],indx_2[1]])
         lvl3_id = int(mapTindx[indx_3[0],indx_3[1]])

@@ -23,9 +23,9 @@ Agent = autoclass('agents.robinBaumgarten.Agent')
 gridsize_x = 151
 gridsize_y = 26
 
-num_params = 96
+num_params = 32
 boundary_value = 1
-batch_size = 3
+batch_size = 1
 nz = 32
 record_frequency=20
 
@@ -50,7 +50,7 @@ def eval_mario(level):
     agent = Agent()
     game = MarioGame()
 
-
+    
     #from IPython import embed
     #embed()
     result = game.runGame(agent, JString(realLevel), 20, 0, True)
@@ -100,12 +100,13 @@ def import_data_file(file_name, all_simulations_name):
 
                             #if bc_1 > max_BC and fitness == 1.0:               
                             #  max_BC = bc_1 
-                            if bc_1 / 150.0 + bc_2 / 26.0 > max_BC and fitness == 1.0:               
-                              max_BC = + bc_1 / 150.0 + bc_2 / 26.0
+                            if  bc_1 / 150.0 + bc_2 / 22.0 > max_BC and fitness == 1.0 and int(data_point_info[0])!=5138 and int(data_point_info[0])!=9664 and int(data_point_info[0])!=3845:               
+                              max_BC =  bc_1 / 150.0 + bc_2 / 22.0
                               max_BC_indx = data_point_info[0]
                               print("datapointinfo: " + str(data_point_info))
                               print("BC 1: " + str(bc_1))
                               print("BC 2: " + str(bc_2))
+                              print("fitness: " + str(fitness))
                               print("max_BC: " + str(max_BC))
                 for i, individual in enumerate(all_simulations):
                     if individual[0] == str(max_BC_indx):
@@ -122,7 +123,6 @@ def import_data_file(file_name, all_simulations_name):
                         #print(str(level))
                         write_level(level)
                         eval_mario(level)
-
        
                 return
 
@@ -133,16 +133,19 @@ if __name__ == "__main__":
     domain = "MarioGAN"    
 
 
-    data_root = 'test_logs/MarioGAN/CMAME'
-
-
-    data_root = str("test_logs/" + domain + "/CMAME")
-
-    file_name = "CMAME_" + str(domain) + "BC_sim3_elites_freq20.csv"
+    data_root = str("test_file2/test_map_mariogan")
+    #files = sorted([f for f in os.listdir(data_root)])[0:]
+    #all_individuals_filename = data_root
+    #for file_name in files:
+    #file_name = files[1]
+    #from IPython import embed
+    #embed()
+    file_name = "CMAME_" + str(domain) + "BC_sim10_elites_freq20.csv"
+    file_name = str(data_root + "/" + file_name)
 
     #file_name = "CMAME_MarioGANBC_sim3_elites_freq20.csv"
-    file_name = str(data_root + "/" + file_name)
-    all_simulations_name = "CMAME_" + str(domain) + "BC_sim3_all_simulations.csv"
+    data_root = str("test_file2/test_sim_mariogan")
+    all_simulations_name = "CMAME_" + str(domain) + "BC_sim10_all_simulations.csv"
     all_simulations_name = str(data_root + "/" + all_simulations_name)
 
     import_data_file(file_name, all_simulations_name)

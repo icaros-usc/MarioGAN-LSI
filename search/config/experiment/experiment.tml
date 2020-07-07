@@ -2,63 +2,63 @@ GAN_model_path = "GANTrain/samples/netG_epoch_4999_7684.pth"
 Visualize=false
 
 [[Trials]]
-num_trials=20
-trial_config= "search/config/trial/CMAME_MarioGANBC.tml"
+num_trials=5
+trial_config= "search/config/trial/CMAMEimp_MarioGANBC.tml"
 
 [[Trials]]
-num_trials=20
+num_trials=5
 trial_config="search/config/trial/CMAES_MarioGANBC.tml"
 
 [[Trials]]
-num_trials=20
+num_trials=5
 trial_config="search/config/trial/MAPELITES_MarioGANBC.tml"
 
 [[Trials]]
-num_trials=20
+num_trials=5
 trial_config="search/config/trial/ISOLINEDD_MarioGANBC.tml"
 
 [[Trials]]
-num_trials=20
+num_trials=5
 trial_config="search/config/trial/RANDOM_MarioGANBC.tml"
 
 [[Trials]]
-num_trials=20
-trial_config= "search/config/trial/CMAME_KLBC.tml"
+num_trials=5
+trial_config= "search/config/trial/CMAMEimp_KLBC.tml"
 
 [[Trials]]
-num_trials=20
+num_trials=5
 trial_config="search/config/trial/CMAES_KLBC.tml"
 
 [[Trials]]
-num_trials=20
+num_trials=5
 trial_config="search/config/trial/MAPELITES_KLBC.tml"
 
 [[Trials]]
-num_trials=20
+num_trials=5
 trial_config="search/config/trial/ISOLINEDD_KLBC.tml"
 
 [[Trials]]
-num_trials=20
+num_trials=5
 trial_config="search/config/trial/RANDOM_KLBC.tml"
 
 [[Trials]]
-num_trials=20
-trial_config= "search/config/trial/CMAME_8Binary.tml"
+num_trials=5
+trial_config= "search/config/trial/CMAMEimp_8Binary.tml"
 
 [[Trials]]
-num_trials=20
+num_trials=5
 trial_config="search/config/trial/CMAES_8Binary.tml"
 
 [[Trials]]
-num_trials=20
+num_trials=5
 trial_config="search/config/trial/MAPELITES_8Binary.tml"
 
 [[Trials]]
-num_trials=20
+num_trials=5
 trial_config="search/config/trial/ISOLINEDD_8Binary.tml"
 
 [[Trials]]
-num_trials=20
+num_trials=5
 trial_config="search/config/trial/RANDOM_8Binary.tml"
 
 

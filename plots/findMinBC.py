@@ -23,9 +23,9 @@ Agent = autoclass('agents.robinBaumgarten.Agent')
 gridsize_x = 151
 gridsize_y = 26
 
-num_params = 96
+num_params = 32
 boundary_value = 1
-batch_size = 3
+batch_size = 1
 nz = 32
 record_frequency=20
 
@@ -101,8 +101,8 @@ def import_data_file(file_name, all_simulations_name):
 
                             #if bc_1 + bc_2 < min_BC and fitness == 1.0:               
                             #  min_BC = bc_1 + bc_2 
-                            if bc_1 / 150.0 + bc_2 / 25.0 < min_BC and fitness == 1.0:               
-                              min_BC = bc_1 / 150.0 + bc_2 / 25.0
+                            if bc_1+ bc_2  < min_BC and fitness == 1.0:               
+                              min_BC = bc_1  + bc_2 
                               min_BC_indx = data_point_info[0]
                               print("datapointinfo: " + str(data_point_info))
                               print("min BC: " + str(min_BC))
@@ -146,18 +146,19 @@ if __name__ == "__main__":
 
     domain = "MarioGAN"    
 
-    data_root = str("../test_file")
+    data_root = str("test_file/test_map_mariogan")
     #files = sorted([f for f in os.listdir(data_root)])[0:]
     #all_individuals_filename = data_root
     #for file_name in files:
     #file_name = files[1]
     #from IPython import embed
     #embed()
-    file_name = "CMAME_" + str(domain) + "BC_sim2_elites_freq20.csv"
+    file_name = "CMAME_" + str(domain) + "BC_sim12_elites_freq20.csv"
+    file_name = str(data_root + "/" + file_name)
 
     #file_name = "CMAME_MarioGANBC_sim3_elites_freq20.csv"
-    file_name = str(data_root + "/" + file_name)
-    all_simulations_name = "CMAME_" + str(domain) + "BC_sim1_all_simulations.csv"
+    data_root = str("test_file/test_sim_mariogan")
+    all_simulations_name = "CMAME_" + str(domain) + "BC_sim12_all_simulations.csv"
     all_simulations_name = str(data_root + "/" + all_simulations_name)
 
     import_data_file(file_name, all_simulations_name)

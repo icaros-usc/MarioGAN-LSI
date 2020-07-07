@@ -145,7 +145,7 @@ if __name__ == "__main__":
 
     map = mapT
     #cmap =
-    cmap = ListedColormap(sns.color_palette("coolwarm", 5).as_hex())
+    cmap = ListedColormap(sns.color_palette("coolwarm", 6).as_hex())
     with sns.axes_style("white"):
         numTicks = 10#11
         mapDims = [60,60]
@@ -158,6 +158,7 @@ if __name__ == "__main__":
         zero_indices = np.where(map == 0)
         mask[zero_indices] = np.nan
         cmap.set_bad("white") 
+        sns.set_style("white")
         g = sns.heatmap(mapT, annot=False, fmt=".0f",
                 #yticklabels=[],
                 vmin=0.0,
@@ -181,6 +182,10 @@ if __name__ == "__main__":
 #        plt.xticklabels=['0','4.17'], 
         for item in g.get_xticklabels():
             item.set_rotation(0)
+
+  
+        for _, spine in g.spines.items():
+           spine.set_visible(True)
 
         matplotlib.rcParams.update({'font.size': 20})
         plt.show()

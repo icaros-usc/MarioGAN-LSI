@@ -111,7 +111,7 @@ if __name__ == "__main__":
                     #    embed()
                     # if i == 999 and (cell_indx == 276 or cell_indx == 552 or cell_indx == 196 or cell_indx == 128):
 
-    data_root = '../large_logs/8Binary/MEline'
+    data_root = '../logs/8Binary/Random'
     files = sorted([f for f in os.listdir(data_root)])[0:]
     QD_scores = []
     coverages = []
