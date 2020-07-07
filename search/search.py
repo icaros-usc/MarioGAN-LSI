@@ -45,6 +45,10 @@ parser.add_argument('-c','--config', help='path of experiment config file',requi
 opt = parser.parse_args()
 """
 
+batch_size =1
+nz = 32
+record_frequency=20
+
 if not os.path.exists("logs"):
     os.mkdir("logs")
 
@@ -99,7 +103,7 @@ def run_trial(num_to_evaluate,algorithm_name,algorithm_config,elite_map_config,t
     if(trial_name.split('_')[1]=="8Binary"):
         feature_map = FeatureMap(num_to_evaluate, feature_ranges,resolutions=(2,)*8)
     elif(trial_name.split('_')[1]=="MarioGANBC"):
-        feature_map = FeatureMap(num_to_evaluate, feature_ranges, resolutions=(161,26))
+        feature_map = FeatureMap(num_to_evaluate, feature_ranges, resolutions=(151,26))
     elif(trial_name.split('_')[1]=="KLBC"):
         feature_map = FeatureMap(num_to_evaluate, feature_ranges, resolutions=(60,60))
     else:
@@ -114,29 +118,36 @@ def run_trial(num_to_evaluate,algorithm_name,algorithm_config,elite_map_config,t
         print("Start Running CMAME")
         mutation_power=algorithm_config["mutation_power"]
         population_size=algorithm_config["population_size"]
-        algorithm_instance=CMA_ME_Algorithm(mutation_power,num_to_evaluate,population_size,feature_map,trial_name,column_names,bc_names)
+        initial_population = algorithm_config["initial_population"] 
+        emitter_type = algorithm_config["emitter_type"] 
+        algorithm_instance=CMA_ME_Algorithm(mutation_power,initial_population, num_to_evaluate,population_size,feature_map,trial_name,column_names,bc_names, emitter_type) 
     elif algorithm_name=="MAPELITES":
         print("Start Running MAPELITES")
         mutation_power=algorithm_config["mutation_power"]
         initial_population=algorithm_config["initial_population"]
         algorithm_instance=MapElitesAlgorithm(mutation_power, initial_population, num_to_evaluate, feature_map,trial_name,column_names,bc_names)
     elif algorithm_name=="ISOLINEDD":
-        print("Start Running ISOLINEDD")
+        print("Start Running MAP-Elites with ISOLINEDD")
         mutation_power1=algorithm_config["mutation_power1"]
         mutation_power2=algorithm_config["mutation_power2"]
         initial_population=algorithm_config["initial_population"]
-        algorithm_instance=ISOLineDDAlgorithm(mutation_power1, mutation_power2,initial_population, num_to_evaluate, feature_map,trial_name,column_names,bc_names)
+        algorithm_instance=MapElitesLineAlgorithm(mutation_power1, mutation_power2,initial_population, num_to_evaluate, feature_map,trial_name,column_names,bc_names)
     elif algorithm_name=="RANDOM":
         print("Start Running RANDOM")
         algorithm_instance=RandomGenerator(num_to_evaluate,feature_map,trial_name,column_names,bc_names)
     
     simulation=1
     while algorithm_instance.is_running():
-        ind = algorithm_instance.generate_individual(model_path)
+        ind = algorithm_instance.generate_individual()
+
+        ind.level=gan_generate(ind.param_vector,batch_size,nz,model_path)
         ind.fitness = evaluate(ind,visualize)
+
         algorithm_instance.return_evaluated_individual(ind)
+
         print(str(simulation)+"/"+str(num_to_evaluate)+" simulations finished")
         simulation=simulation+1
+
     algorithm_instance.all_records.to_csv("logs/"+trial_name+"_all_simulations.csv")
 
 """
@@ -170,3 +181,5 @@ def start_search(sim_number,trial_index,experiment_toml,model_path,visualize):
     run_trial(NumSimulations,AlgorithmToRun,AlgorithmConfig,EliteMapConfig,TrialName,model_path,visualize)
     print("Finished One Trial")
 	
+
+

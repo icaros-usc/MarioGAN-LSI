@@ -101,7 +101,7 @@ def calc_kldivergent_level1(ind,result):
         strlevel.append(row)
     strlevel=np.array(strlevel)[:,:56]
     ind_count=calc_tp_count(strlevel,1)
-    return calc_tp_kldiv(ind_count,count1)
+    return 0.5*calc_tp_kldiv(ind_count,count1)+0.5*calc_tp_kldiv(count1,ind_count)
 
 def calc_kldivergent_level3(ind,result):
     strlevel=[]
@@ -113,7 +113,7 @@ def calc_kldivergent_level3(ind,result):
         strlevel.append(row)
     strlevel=np.array(strlevel)[:,:56]
     ind_count=calc_tp_count(strlevel,1)
-    return calc_tp_kldiv(ind_count,count3)
+    return 0.5*calc_tp_kldiv(ind_count,count3)+0.5*calc_tp_kldiv(count3,ind_count)
 
 def calc_jump(ind,result):
     num_jumps=result.getNumJumps()

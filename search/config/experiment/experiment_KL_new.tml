@@ -1,0 +1,28 @@
+GAN_model_path = "GANTrain/samples/netG_epoch_4999_7684.pth"
+Visualize=false
+
+
+[[Trials]]
+num_trials=2
+trial_config= "search/config/trial/CMAME_KLBC.tml"
+
+[[Trials]]
+num_trials=2
+trial_config="search/config/trial/CMAES_KLBC.tml"
+
+[[Trials]]
+num_trials=2
+trial_config="search/config/trial/MAPELITES_KLBC.tml"
+
+[[Trials]]
+num_trials=2
+trial_config="search/config/trial/ISOLINEDD_KLBC.tml"
+
+[[Trials]]
+num_trials=2
+trial_config="search/config/trial/RANDOM_KLBC.tml"
+
+
+
+
+

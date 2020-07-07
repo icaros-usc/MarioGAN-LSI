@@ -3,7 +3,7 @@ Visualize=false
 
 [[Trials]]
 num_trials=1
-trial_config= "search/config/trial/CMAME_MarioGANBC.tml"
+trial_config= "search/config/trial/CMAMEimp_MarioGANBC.tml"
 
 [[Trials]]
 num_trials=1
@@ -23,7 +23,7 @@ trial_config="search/config/trial/RANDOM_MarioGANBC.tml"
 
 [[Trials]]
 num_trials=1
-trial_config= "search/config/trial/CMAME_KLBC.tml"
+trial_config= "search/config/trial/CMAMEimp_KLBC.tml"
 
 [[Trials]]
 num_trials=1
@@ -43,7 +43,7 @@ trial_config="search/config/trial/RANDOM_KLBC.tml"
 
 [[Trials]]
 num_trials=1
-trial_config= "search/config/trial/CMAME_8Binary.tml"
+trial_config= "search/config/trial/CMAMEimp_8Binary.tml"
 
 [[Trials]]
 num_trials=1

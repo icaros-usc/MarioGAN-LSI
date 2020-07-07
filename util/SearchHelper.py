@@ -6,10 +6,6 @@ import toml
 from numpy.linalg import eig
 import json
 
-
-boundary_value = 5.12
-nz = 32
-
 with open('GANTrain/index2str.json') as f:
   index2str = json.load(f)
   
@@ -24,12 +20,6 @@ def to_level(number_level):
         result.append(''.join(get_char(y) for y in x)+'\n')
     result= ''.join(result)
     return result
-
-def gaussian():
-    u1 = 1.0 - random.random()
-    u2 = 1.0 - random.random()
-    return math.sqrt(-2.0 * math.log(u1)) * math.sin(2.0 * math.pi * u2)
-
 
 def make_record_frame(points):
     x, y, f = zip(*points)

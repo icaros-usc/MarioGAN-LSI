@@ -1,5 +1,5 @@
 algorithm = "CMAME"
-trial_name="CMAME_8Binary"
+trial_name="CMAMEimp_8Binary"
 num_simulations=10000
-algorithm_config = "search/config/algorithms/cma_me.tml"
+algorithm_config = "search/config/algorithms/cma_me_imp.tml"
 elite_map_config = "search/config/elite_map/8Binary.tml"
