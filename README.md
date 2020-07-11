@@ -1,5 +1,5 @@
 # MarioGAN-LSI
-This project implements the experiments for the paper *[Illuminating Mario Scenes in the Latent Spaceof a Generative Adversarial Network](https://arxiv.org/abs/1912.02400)*. The project is derived from the *MarioGAN(https://github.com/TheHedgeify/DagstuhlGAN)* project. We implement a method for Latent Space Illumination (LSI) which explores the latent space of generative adversarial network via modern quality diversity algorithms.
+This project implements the experiments for the paper *[Illuminating Mario Scenes in the Latent Spaceof a Generative Adversarial Network](https://arxiv.org/abs/1912.02400)*. The project is derived from the *[MarioGAN](https://github.com/TheHedgeify/DagstuhlGAN)* project. We implement a method for Latent Space Illumination (LSI) which explores the latent space of generative adversarial network via modern quality diversity algorithms.
 
 # Training the GAN
 The GAN that generates Mario levels can be run by the following command in the GANTrain folder:
