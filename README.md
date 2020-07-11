@@ -1,12 +1,19 @@
 # MarioGAN-LSI
-An experimental setup for running quality diversity algorithms on GAN latent spaces.
+This project implements the experiments for the paper *[Illuminating Mario Scenes in the Latent Spaceof a Generative Adversarial Network](https://arxiv.org/abs/1912.02400)*. The project is derived from the *MarioGAN(https://github.com/TheHedgeify/DagstuhlGAN)* project. We implement a method for Latent Space Illumination (LSI) which explores the latent space of generative adversarial network via modern quality diversity algorithms.
 
-# Instruction to run the experiment
-At MarioGAN-LSI, run the command: python3 Search/run_search.py -w 1 -c Search/config/experiment/experiment.tml.
-(-w is the workerID, ranges from 1 to total number of trials, -c is the path to the experiment config.)
+# Training the GAN
+The GAN that generates Mario levels can be run by the following command in the GANTrain folder:
 
-# Config Format
-One experiment config (in Search/config/experiment) points to multiple trials. One trial config (in Search/config/trial) points to an algorithm config and an elite map config (what features to use as BCs).
+```
+python3 GANTraining.py --cuda
+```
 
-# Output
-For each trial, 2 csv files are generated under /log/. One is the records and data gathered of all 10000 simulations, ordered by index 0~9999. The other is the elite map records, where each row contains all elements in the elite map at a given time step. The elite map is recorded after every 20 simulations, so there should be 10000/20 rows in total.
+However, training the GAN is unnecessary as we include a *[pretrained model](https://github.com/icaros-usc/MarioGAN-LSI/blob/master/GANTrain/samples/netG_epoch_4999_7684.pth)* in the repo.
+
+# Running LSI Experiments
+Experiments can be run with the command:
+```
+python3 search/run_search.py -w 1 -c search/config/experiment/experiment.tml.
+```
+
+The w parameter specifies a worker id which specifies which trial to run from a given experiment file. This allows for parallel execution of all experiments on a high-performance cluster.
