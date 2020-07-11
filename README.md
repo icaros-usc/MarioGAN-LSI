@@ -16,4 +16,4 @@ Experiments can be run with the command:
 python3 search/run_search.py -w 1 -c search/config/experiment/experiment.tml
 ```
 
-The w parameter specifies a worker id which specifies which trial to run from a given experiment file. This allows for parallel execution of all experiments on a high-performance cluster.
+The w parameter specifies a worker id which specifies which trial to run from a given experiment file. This allows for parallel execution of all trials on a high-performance cluster.
